@@ -1,0 +1,38 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Backups
+history.bak.*/
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+digest.log
+
+# Personal / internal — not for public repo
+CLAUDE.md
+deploy/
+
+# Build artifacts (regenerated locally)
+# Note: index.html IS committed (it's the public dashboard)

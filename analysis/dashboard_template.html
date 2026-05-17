@@ -1,0 +1,1556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tech AI News — Editorial Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  :root {
+    --bg: #F4F2ED;
+    --ink: #0A0A0A;
+    --ink-soft: #2A2826;
+    --gray: #A8A39A;
+    --rule: rgba(10,10,10,0.12);
+    --rule-strong: rgba(10,10,10,0.32);
+    --watermark: rgba(10,10,10,0.045);
+    /* Axioma relax: ONE accent (ochre, coherent with Axioma's gold for imagery).
+       Used ONLY to mark "this week" / "top mover" in charts. Never on UI chrome. */
+    --accent: #9C6B2B;
+    --accent-soft: rgba(156, 107, 43, 0.15);
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+    --fs-body: 16px;
+    --fs-small: 14px;
+    --fs-label: 11px;
+    --fs-h3: 21px;
+    --fs-h2: 24px;
+    --fs-h1: 32px;
+    --fs-display: 44px;
+    --fs-hero: 56px;
+    --ls-label: 0.12em;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--fs-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--ink); color: var(--bg); }
+
+  a { color: var(--ink); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .num { font-variant-numeric: tabular-nums; }
+  .gray { color: var(--gray); }
+  .accent { color: var(--accent); }
+  .mono-label {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+    color: var(--gray);
+  }
+
+  /* ============== HEADER ============== */
+  header.editorial {
+    padding: 32px 48px 24px;
+    border-bottom: 1px solid var(--rule-strong);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 48px;
+    align-items: end;
+  }
+  header .wordmark {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: var(--fs-h1);
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  header .wordmark .div { display: inline-block; width: 1px; height: 24px; background: var(--ink); margin: 0 12px; vertical-align: middle; }
+  header .meta {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    letter-spacing: var(--ls-label);
+    text-transform: uppercase;
+    color: var(--gray);
+    text-align: right;
+    line-height: 1.6;
+  }
+  header .meta b { color: var(--ink); font-weight: 500; }
+  header .tag {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gray);
+    align-self: end;
+  }
+
+  /* ============== STATS BAR ============== */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-bottom: 1px solid var(--rule);
+    padding: 0 48px;
+  }
+  .stats-bar .stat { padding: 18px 0; border-right: 1px solid var(--rule); text-align: center; }
+  .stats-bar .stat:last-child { border-right: none; }
+
+  /* ============== TOPIC GLOSSARY STRIP — compact one-liner ============== */
+  .glossary-strip {
+    display: grid;
+    grid-template-columns: auto repeat(6, minmax(0, 1fr));
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 48px;
+    background: rgba(10,10,10,0.02);
+  }
+  .glossary-strip .gloss-label {
+    padding: 8px 12px 8px 0;
+    font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent);
+    white-space: nowrap; align-self: center;
+  }
+  .glossary-strip .gloss {
+    padding: 8px 12px;
+    border-left: 1px solid var(--rule);
+    min-width: 0;
+    display: flex; align-items: baseline; gap: 6px;
+    overflow: hidden;
+  }
+  .glossary-strip .gloss .name {
+    font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink);
+    font-weight: 500; white-space: nowrap;
+  }
+  .glossary-strip .gloss .def {
+    font-family: var(--sans); font-size: 11px; color: var(--gray);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .stats-bar .stat .l {
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 8px;
+  }
+  .stats-bar .stat .v { font-family: var(--serif); font-weight: 500; font-size: 28px; line-height: 1; }
+  .stats-bar .stat .v.sm { font-size: 20px; }
+
+  /* ============== TABS ============== */
+  nav.tabs {
+    padding: 0 48px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+  }
+  nav.tabs button {
+    background: none; border: none;
+    border-top: 1px solid transparent;
+    padding: 18px 24px;
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--gray);
+    cursor: pointer;
+    position: relative;
+  }
+  nav.tabs button .n { color: var(--gray); margin-right: 10px; font-weight: 500; }
+  nav.tabs button:hover, nav.tabs button:hover .n { color: var(--ink); }
+  nav.tabs button.active, nav.tabs button.active .n { color: var(--ink); }
+  nav.tabs button.active::after {
+    content: ""; position: absolute;
+    left: 24px; right: 24px; bottom: -1px;
+    height: 1px; background: var(--ink);
+  }
+
+  /* ============== MAIN ============== */
+  main { padding: 32px 48px 80px; max-width: 1600px; }
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* ============== NARRATIVE BANNER ============== */
+  .narrative {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 26px;
+    line-height: 1.35;
+    margin: 0 0 28px 0;
+    color: var(--ink);
+    max-width: 1100px;
+  }
+  .narrative b { font-weight: 600; }
+  .narrative .lead {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+    color: var(--accent);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  /* ============== HIGHLIGHTS ============== */
+  .highlights { border-bottom: 1px solid var(--rule-strong); padding-bottom: 32px; margin-bottom: 32px; }
+  .highlights .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
+  .highlights .head h2 { font-family: var(--serif); font-weight: 500; font-size: var(--fs-h2); margin: 0; }
+  .highlights .head .meta { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); }
+  .highlight-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; }
+  @media (max-width: 900px) {
+    .highlight-grid { grid-template-columns: 1fr; }
+  }
+  .hi-card {
+    padding: 24px 20px;
+    border-right: 1px solid var(--rule);
+    border-top: 1px solid var(--rule);
+    cursor: pointer;
+    text-align: center;            /* user request: centrar values y labels */
+  }
+  .hi-card:hover { background: rgba(10,10,10,0.025); }
+  .hi-card:nth-child(3n) { border-right: none; }
+  .hi-card .l {
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 12px;
+  }
+  .hi-card .v {
+    font-family: var(--serif); font-weight: 500; font-size: var(--fs-display);
+    line-height: 1.05; margin-bottom: 10px;
+  }
+  .hi-card .v.sm { font-size: 24px; line-height: 1.25; }
+  .hi-card .sub { font-family: var(--sans); font-size: var(--fs-small); color: var(--ink-soft); line-height: 1.4; }
+  .hi-card .sub .delta-up { font-weight: 600; }
+  .hi-card .sub .delta-down { color: var(--gray); }
+  .hi-card .arrow {
+    margin-top: 12px;
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--ink);
+  }
+
+  /* ============== CONTROLS ============== */
+  .controls {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 24px;
+    display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-end;
+  }
+  .controls label {
+    display: flex; flex-direction: column; gap: 6px;
+    font-family: var(--mono); font-size: 10px;
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+  }
+  .controls input[type="text"], .controls input[type="date"],
+  .controls input[type="number"], .controls select {
+    font-family: var(--sans); font-size: 15px; color: var(--ink);
+    background: transparent; border: none;
+    border-bottom: 1px solid var(--rule); padding: 4px 0;
+    min-width: 100px; text-transform: none; letter-spacing: 0;
+  }
+  .controls input[type="text"] { min-width: 240px; }
+  .controls input[type="number"] { min-width: 60px; max-width: 80px; }
+  .controls input:focus, .controls select:focus { outline: none; border-bottom-color: var(--ink); }
+  .controls .checkbox { flex-direction: row; align-items: center; gap: 8px; padding-bottom: 4px; }
+  .controls .checkbox input { margin: 0; }
+  .controls .count {
+    margin-left: auto;
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--gray);
+  }
+  .controls .count b {
+    color: var(--ink); font-family: var(--serif); font-weight: 500;
+    font-size: 20px; vertical-align: -2px; margin-right: 4px;
+  }
+  .cta {
+    background: none; border: none; padding: 0 0 2px; cursor: pointer;
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label);
+    color: var(--ink); border-bottom: 1px solid var(--ink);
+  }
+  .cta:hover { color: var(--gray); border-bottom-color: var(--gray); }
+
+  /* ============== WINDOW SWITCH (used by Spotlight) ============== */
+  .winswitch {
+    display: inline-flex;
+    border: 1px solid var(--rule-strong);
+    margin-bottom: 8px;
+  }
+  .winswitch button {
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--rule);
+    padding: 10px 20px;
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label);
+    color: var(--gray); cursor: pointer;
+  }
+  .winswitch button:last-child { border-right: none; }
+  .winswitch button.active { background: var(--ink); color: var(--bg); }
+  .winswitch button:hover:not(.active) { color: var(--ink); }
+
+  /* ============== ITEM LIST ============== */
+  .items { list-style: none; padding: 0; margin: 0; }
+  .item {
+    padding: 22px 0; border-top: 1px solid var(--rule);
+    display: grid; grid-template-columns: 90px 1fr 160px; gap: 24px; align-items: start;
+  }
+  .item:first-child { border-top: none; }
+  .item.curated .col-date::before { content: "●"; color: var(--accent); margin-right: 6px; }
+  .col-date {
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--gray); padding-top: 2px;
+  }
+  .item h3 { font-family: var(--serif); font-weight: 500; font-size: var(--fs-h3); line-height: 1.25; margin: 0 0 8px 0; }
+  .item .summary { font-size: 15px; color: var(--ink-soft); line-height: 1.5; }
+  .item .dsum { font-size: 15px; color: var(--ink); line-height: 1.5; font-family: var(--serif); font-weight: 400; font-style: italic; }
+  .item .chiprows { margin-top: 12px; display: grid; gap: 4px; }
+  .item .chiprow {
+    display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: baseline;
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label);
+  }
+  .item .chiprow .rl { color: var(--gray); }
+  .item .chiprow .rv .chip { cursor: pointer; color: var(--ink); font-weight: 500; }
+  .item .chiprow.topics .rv .chip { color: var(--ink-soft); font-weight: 400; }
+  .item .chiprow .rv .chip:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .item .chiprow .rv .chip + .chip::before { content: " · "; color: var(--gray); cursor: default; text-decoration: none; }
+  .item .col-side {
+    text-align: right;
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+  }
+  .item .col-side .money {
+    color: var(--ink); font-family: var(--serif); font-size: 24px; font-weight: 500;
+    letter-spacing: -0.01em; line-height: 1.1; text-transform: none;
+  }
+  .item .col-side .src { display: block; margin-top: 6px; }
+
+  /* ============== GRAPH ============== */
+  .graph-layout { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 28px; }
+  #graph { height: 680px; border: 1px solid var(--rule); min-width: 0; }
+  .graph-side { height: 680px; overflow-y: auto; border-left: 1px solid var(--rule); padding-left: 24px; min-width: 0; }
+  @media (max-width: 1280px) {
+    .graph-layout { grid-template-columns: 1fr; }
+    .graph-side { height: auto; max-height: 600px; border-left: none; padding-left: 0; border-top: 1px solid var(--rule-strong); padding-top: 20px; margin-top: 20px; }
+  }
+  .graph-side .empty { color: var(--gray); font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); }
+  .graph-side h3 { font-family: var(--serif); font-weight: 500; font-size: 26px; line-height: 1.05; margin: 0 0 10px 0; }
+
+  /* Fixed-grid KV rows — fixes ugly space-between gap */
+  .kv-grid { border-top: 1px solid var(--rule); }
+  .kv-grid .row {
+    display: grid; grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .kv-grid .row .k {
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+  }
+  .kv-grid .row .v { font-family: var(--mono); font-size: 14px; color: var(--ink); justify-self: end; }
+
+  .graph-side h4 {
+    font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
+    letter-spacing: var(--ls-label); color: var(--gray);
+    margin: 14px 0 6px; font-weight: 500;
+  }
+  .graph-side .colist .crow {
+    display: grid; grid-template-columns: 1fr auto;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .graph-side .colist .crow:last-child { border-bottom: none; }
+  .graph-side .colist .crow .k { color: var(--ink); }
+  .graph-side .colist .crow .v { font-family: var(--mono); color: var(--ink); }
+
+  .graph-bottom {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px;
+    margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--rule-strong);
+  }
+  @media (max-width: 1100px) {
+    .graph-bottom { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .graph-bottom h4 { font-family: var(--serif); font-weight: 500; font-size: 20px; margin: 0 0 8px 0; line-height: 1.2; }
+  .graph-bottom .sub { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 12px; }
+
+  /* ============== STACKED BAR (breakdown by topic) ============== */
+  .stacked {
+    display: flex;
+    height: 28px;
+    border: 1px solid var(--rule-strong);
+    margin: 8px 0 4px;
+    overflow: hidden;
+  }
+  .stacked .seg {
+    height: 100%;
+    border-right: 1px solid var(--bg);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stacked .seg:last-child { border-right: none; }
+  .stacked .seg.top { background: var(--accent); }
+  .stacked .seg .lbl {
+    font-family: var(--mono); font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--bg);
+  }
+  .stacked-legend {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 16px; align-items: baseline;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .stacked-legend:last-child { border-bottom: none; }
+  .stacked-legend .swatch {
+    width: 12px; height: 12px;
+    background: var(--ink); display: inline-block;
+    margin-right: 8px; vertical-align: -1px;
+  }
+  .stacked-legend .swatch.top { background: var(--accent); }
+  .stacked-legend .topic { font-family: var(--sans); }
+  .stacked-legend .pct { font-family: var(--mono); font-size: 12px; color: var(--gray); }
+  .stacked-legend .val { font-family: var(--mono); font-size: 13px; color: var(--ink); text-align: right; }
+
+  /* ============== BARTABLE ============== */
+  .bartable { width: 100%; }
+  .bartable .row {
+    display: grid; grid-template-columns: 200px 1fr 100px;
+    align-items: center; gap: 16px; padding: 10px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .bartable .row:first-child { border-top: none; }
+  .bartable .row.active { background: rgba(10,10,10,0.04); }
+  .bartable .row .lbl { font-family: var(--sans); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bartable .row .bar { height: 2px; background: var(--rule); position: relative; }
+  .bartable .row .bar .fill { background: var(--ink); height: 100%; }
+  .bartable .row .bar .fill.top { background: var(--accent); }
+  .bartable .row .v { text-align: right; font-family: var(--mono); font-size: 12px; color: var(--ink); }
+  .bartable .row.clickable { cursor: pointer; }
+  .bartable .row.clickable:hover .lbl { text-decoration: underline; text-underline-offset: 4px; }
+  .bartable.compact .row { grid-template-columns: 150px 1fr 60px; gap: 12px; padding: 8px 0; }
+  .bartable.compact .row .lbl { font-size: 14px; }
+  .bartable.compact .row .v { font-size: 11px; }
+
+  /* ============== MONEY — sankey + pareto ============== */
+  .sankey-wrap {
+    margin: 16px 0 40px 0;
+    padding: 24px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+  }
+  .sankey-wrap svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+  .pareto-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+  @media (max-width: 1000px) { .pareto-grid { grid-template-columns: 1fr; } }
+  .pareto-row {
+    display: grid; grid-template-columns: minmax(0, 130px) minmax(0, 1fr) 90px 50px;
+    gap: 12px; align-items: center; padding: 8px 0;
+    border-top: 1px solid var(--rule);
+    font-size: 14px;
+  }
+  .pareto-row:first-child { border-top: none; }
+  .pareto-row .lbl { font-family: var(--sans); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pareto-row .bar { height: 4px; background: var(--rule); position: relative; }
+  .pareto-row .bar .fill { background: var(--ink); height: 100%; }
+  .pareto-row .bar .fill.top { background: var(--accent); }
+  .pareto-row .v { font-family: var(--mono); font-size: 12px; text-align: right; }
+  .pareto-row .cum { font-family: var(--mono); font-size: 11px; color: var(--gray); text-align: right; }
+  .pareto-row.cumline { border-top: 1px dashed var(--rule-strong); }
+  .money-breakdown {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .money-breakdown h3 { font-family: var(--serif); font-weight: 500; font-size: var(--fs-h2); margin: 0 0 4px; line-height: 1.1; }
+  .money-breakdown .sub { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); margin: 0 0 16px; }
+  .money-breakdown .empty { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); padding: 24px 0; }
+
+  .section-h { font-family: var(--serif); font-weight: 500; font-size: var(--fs-h2); margin: 0 0 16px; line-height: 1.1; }
+  .section-h.lg { font-size: 28px; margin: 48px 0 20px 0; }
+  .legend { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 16px; }
+  .legend b { color: var(--ink); }
+
+  /* ============== SPOTLIGHT (Tab 04 redesign) ============== */
+  .spot-head {
+    display: flex; align-items: center; gap: 32px;
+    margin-bottom: 24px;
+  }
+  .spot-head .desc {
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+  }
+  .spot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 48px; }
+  @media (max-width: 1100px) {
+    .spot-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .spot-col {
+    border-top: 1px solid var(--rule-strong);
+    padding-top: 24px;
+  }
+  .spot-col .colhead {
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+    margin-bottom: 12px;
+  }
+  .spot-col .star .name {
+    font-family: var(--serif); font-weight: 500;
+    font-size: var(--fs-display); line-height: 1.05;
+    color: var(--accent);
+    margin: 0 0 4px 0;
+  }
+  .spot-col .star .stats {
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray);
+    margin-bottom: 24px;
+  }
+  .spot-col .star .stats b { color: var(--ink); }
+  .spot-col .rest .item-row {
+    display: grid; grid-template-columns: 24px 1fr auto;
+    gap: 12px; padding: 8px 0; align-items: baseline;
+    border-top: 1px solid var(--rule);
+    cursor: pointer;
+  }
+  .spot-col .rest .item-row:first-child { border-top: none; }
+  .spot-col .rest .item-row:hover .name { text-decoration: underline; text-underline-offset: 3px; }
+  .spot-col .rest .rank { font-family: var(--mono); font-size: 11px; color: var(--gray); }
+  .spot-col .rest .name { font-family: var(--sans); font-size: 15px; color: var(--ink); }
+  .spot-col .rest .v { font-family: var(--mono); font-size: 12px; color: var(--gray); }
+
+  /* ============== PATTERNS — side-by-side ============== */
+  .patterns-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+  @media (max-width: 1200px) { .patterns-layout { grid-template-columns: 1fr; } }
+  .patterns-layout > div { min-width: 0; }
+  .trend-section { margin-top: 16px; }
+  .trend-row {
+    display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr) 50px;
+    align-items: center; gap: 16px; padding: 8px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .trend-row:first-child { border-top: none; }
+  .trend-row .lbl { font-family: var(--sans); font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .trend-row .spark { color: var(--ink); }
+  .trend-row .v { text-align: right; font-family: var(--mono); font-size: 12px; }
+  .trend-row.clickable { cursor: pointer; }
+  .trend-row.clickable:hover .lbl { text-decoration: underline; text-underline-offset: 4px; }
+
+  .trend-legend {
+    display: flex; gap: 24px; align-items: center;
+    font-family: var(--mono); font-size: var(--fs-label);
+    text-transform: uppercase; letter-spacing: var(--ls-label);
+    color: var(--gray); margin-bottom: 12px;
+  }
+  .trend-legend .swatch { width: 12px; height: 12px; background: var(--ink); display: inline-block; vertical-align: -1px; margin-right: 8px; }
+  .trend-legend .swatch.accent { background: var(--accent); }
+  .trend-legend b { color: var(--ink); }
+  .week-axis {
+    display: grid; grid-template-columns: minmax(0, 110px) minmax(0, 1fr) 50px;
+    gap: 16px; padding-top: 8px;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray);
+  }
+  .week-axis .ticks {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .week-axis .ticks span { text-align: center; padding: 0 2px; }
+
+  .crosstab-wrap { overflow-x: auto; margin-top: 16px; }
+  .crosstab { border-collapse: collapse; font-family: var(--mono); font-size: 12px; }
+  .crosstab th, .crosstab td { border: 1px solid var(--rule); padding: 8px 10px; text-align: center; height: 36px; }
+  .crosstab th {
+    font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label);
+    color: var(--gray); font-weight: 500; background: transparent; vertical-align: middle;
+  }
+  .crosstab th.entity { text-align: left; padding-right: 16px; }
+  .crosstab th.topic { padding: 8px 6px; min-width: 70px; }
+  .crosstab td.label {
+    text-align: left; font-family: var(--sans); font-size: 14px; font-weight: 500;
+    padding: 6px 16px 6px 0; border-left: none; min-width: 140px;
+  }
+  .crosstab td.cell { font-variant-numeric: tabular-nums; min-width: 56px; }
+  .crosstab td.total { font-weight: 600; background: rgba(10,10,10,0.04); }
+
+  /* Mobile */
+  @media (max-width: 900px) {
+    header.editorial, .stats-bar, nav.tabs, main { padding-left: 24px; padding-right: 24px; }
+    header.editorial { grid-template-columns: 1fr; gap: 16px; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .stats-bar .stat:nth-child(3n) { border-right: none; }
+    .item { grid-template-columns: 1fr; }
+    .item .col-side { text-align: left; }
+    .graph-layout, .money-layout, .spot-grid, .highlight-grid { grid-template-columns: 1fr; }
+    .hi-card { border-right: none; }
+    .graph-bottom { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="editorial">
+  <div class="wordmark">Tech<span class="div"></span>AI<span class="div"></span>News</div>
+  <div class="tag">Editorial observatory · pattern analysis of the daily digest archive</div>
+  <div class="meta" id="header-meta"></div>
+</header>
+
+<section class="glossary-strip" id="glossary-strip"></section>
+
+<nav class="tabs">
+  <button data-tab="search" class="active"><span class="n">01</span>Search</button>
+  <button data-tab="graph"><span class="n">02</span>Graph</button>
+  <button data-tab="money"><span class="n">03</span>Money</button>
+  <button data-tab="spotlight"><span class="n">04</span>Spotlight</button>
+  <button data-tab="patterns"><span class="n">05</span>Patterns</button>
+</nav>
+
+<main>
+
+  <!-- ============== SEARCH ============== -->
+  <section class="pane active" id="pane-search">
+
+    <p class="narrative" id="narrative"></p>
+
+    <div class="highlights" id="highlights"></div>
+
+    <div class="controls">
+      <label>Search<input type="text" id="q" placeholder="keywords, entities, topics…"></label>
+      <label>From<input type="date" id="from"></label>
+      <label>To<input type="date" id="to"></label>
+      <label>Source<select id="src"><option value="">(all)</option></select></label>
+      <label>Topic<select id="topic"><option value="">(all)</option></select></label>
+      <label>Region<select id="region"><option value="">(all)</option></select></label>
+      <label>Entity<select id="entity"><option value="">(all)</option></select></label>
+      <label class="checkbox"><input type="checkbox" id="onlyCurated"> Curated only</label>
+      <label class="checkbox"><input type="checkbox" id="onlyMoney"> With $ only</label>
+      <div class="count"><b id="count">0</b> results</div>
+    </div>
+    <div class="items" id="items"></div>
+  </section>
+
+  <!-- ============== GRAPH ============== -->
+  <section class="pane" id="pane-graph">
+    <div class="controls">
+      <label>Time window
+        <select id="graphWindow">
+          <option value="ALL" selected>All time</option>
+          <option value="7D">Last 7 days</option>
+          <option value="15D">Last 15 days</option>
+          <option value="30D">Last 30 days</option>
+          <option value="3M">Last 3 months</option>
+        </select>
+      </label>
+      <label>Min co-mentions<input type="number" id="minCo" value="2" min="1" max="20"></label>
+      <label>Top N entities<input type="number" id="topN" value="60" min="10" max="200"></label>
+      <label>Filter by topic<select id="graphTopic"><option value="">(all)</option></select></label>
+      <label>Rank by
+        <select id="graphSort">
+          <option value="count">Mentions</option>
+          <option value="degree">Degree</option>
+          <option value="money">$ accrued</option>
+        </select>
+      </label>
+      <button class="cta" id="redraw">Redraw →</button>
+      <button class="cta" id="resetZoom">Reset zoom →</button>
+      <div class="count"><span id="graph-info"></span></div>
+    </div>
+    <div class="graph-layout">
+      <div id="graph"></div>
+      <div class="graph-side" id="graph-side">
+        <p class="empty">Click a node to see detail…</p>
+      </div>
+    </div>
+    <div class="graph-bottom">
+      <div>
+        <h4>Top entities by mentions</h4>
+        <p class="sub">Click to inspect in side panel</p>
+        <div class="bartable compact" id="g-top-mentions"></div>
+      </div>
+      <div>
+        <h4>Strongest co-mention pairs</h4>
+        <p class="sub">Both entities in the same article</p>
+        <div class="bartable compact" id="g-top-pairs"></div>
+      </div>
+      <div>
+        <h4>Top entities by $ accrued</h4>
+        <p class="sub">Sum of headline $ across articles</p>
+        <div class="bartable compact" id="g-top-money"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== MONEY ============== -->
+  <section class="pane" id="pane-money">
+    <div class="spot-head">
+      <div class="winswitch" id="money-winswitch">
+        <button data-win="7D">7 Days</button>
+        <button data-win="15D">15 Days</button>
+        <button data-win="30D">30 Days</button>
+        <button data-win="3M">3 Months</button>
+        <button data-win="ALL" class="active">All time</button>
+      </div>
+      <div class="desc" id="money-window-info"></div>
+    </div>
+    <p class="legend"><b>M</b> = million (10⁶) · <b>B</b> = billion (10⁹) · <b>T</b> = trillion (10¹²) — US convention, all USD. Sankey: width proportional to $ accrued.</p>
+
+    <h3 class="section-h">Money flow · entities → topics</h3>
+    <p class="mono-label">Each slab's height is proportional to total $ that entity/topic accrued. Ribbons connect them; the largest flow is in ochre.</p>
+    <div class="sankey-wrap" id="sankey-wrap"></div>
+  </section>
+
+  <!-- ============== SPOTLIGHT (former Words) ============== -->
+  <section class="pane" id="pane-spotlight">
+    <div class="spot-head">
+      <div class="winswitch" id="winswitch">
+        <button data-win="7D" class="active">7 Days</button>
+        <button data-win="15D">15 Days</button>
+        <button data-win="30D">30 Days</button>
+        <button data-win="3M">3 Months</button>
+        <button data-win="ALL">All time</button>
+      </div>
+      <div class="desc" id="spot-window-info"></div>
+    </div>
+    <div class="spot-grid" id="spot-grid"></div>
+  </section>
+
+  <!-- ============== PATTERNS ============== -->
+  <section class="pane" id="pane-patterns">
+    <div class="patterns-layout">
+      <div>
+        <h3 class="section-h">Entity × topic affinity</h3>
+        <p class="mono-label">Articles where both appear. Darker = stronger.</p>
+        <div class="crosstab-wrap">
+          <table class="crosstab" id="crosstab"></table>
+        </div>
+      </div>
+      <div>
+        <h3 class="section-h">Topics over time</h3>
+        <div class="trend-legend">
+          <span><span class="swatch"></span>prior</span>
+          <span><span class="swatch accent"></span><b id="legend-current-week"></b></span>
+        </div>
+        <div id="topic-trend" class="trend-section"></div>
+        <div class="week-axis" id="topic-week-axis"></div>
+
+        <h3 class="section-h" style="margin-top: 32px;">Entities over time</h3>
+        <p class="mono-label">Top 12 by total mentions.</p>
+        <div id="entity-trend" class="trend-section"></div>
+        <div class="week-axis" id="entity-week-axis"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ============================================================
+const DATA = __DATA__;
+const $ = (id) => document.getElementById(id);
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+function fmtMoney(v) {
+  if (!v) return "";
+  if (v >= 1e12) return "$" + (v/1e12).toFixed(1) + "T";
+  if (v >= 1e9) return "$" + (v/1e9).toFixed(1) + "B";
+  if (v >= 1e6) return "$" + (v/1e6).toFixed(0) + "M";
+  return "$" + (v/1e3).toFixed(0) + "K";
+}
+function fmtDelta(d) { return d > 0 ? `+${d}` : String(d); }
+
+function sparkbars(values, opts = {}) {
+  const w = opts.w || 280, h = opts.h || 60;
+  const highlightLast = opts.highlightLast !== false;
+  const labels = opts.labels || [];     // string per bar (date or week label)
+  const valueFmt = opts.valueFmt;       // optional fn(v) for tooltip value
+  if (!values || !values.length) return "";
+  const max = Math.max(...values, 1);
+  const colW = w / values.length;
+  const barW = colW * 0.65;
+  const gap = colW * 0.35;
+  let cells = "";
+  values.forEach((v, i) => {
+    const bh = (v / max) * h;
+    const x = i * colW + gap / 2;
+    const y = h - bh;
+    const isLast = highlightLast && i === values.length - 1;
+    const fill = isLast && v > 0 ? "var(--accent)" : "currentColor";
+    const valText = valueFmt ? valueFmt(v) : String(v);
+    const titleText = labels[i] ? `${labels[i]} · ${valText}` : valText;
+    cells += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" fill="${fill}"><title>${titleText}</title></rect>`;
+  });
+  return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${cells}</svg>`;
+}
+
+// ============================================================
+// HEADER + STATS
+// ============================================================
+(function renderHeader() {
+  const s = DATA.stats;
+  $("header-meta").innerHTML =
+    `<b>${s.n_items}</b> items · <b>${s.date_min}</b> → <b>${s.date_max}</b><br>Built ${DATA.generated_at}`;
+})();
+
+// ============================================================
+// GLOSSARY STRIP (always visible — explains the 6 topics)
+// ============================================================
+(function renderGlossary() {
+  const order = DATA.topic_order;
+  const g = DATA.topic_glossary;
+  let html = '<div class="gloss-label">Topics</div>';
+  for (const t of order) {
+    html += `<div class="gloss"><span class="name">${t}</span><span class="def">${g[t] || ""}</span></div>`;
+  }
+  $("glossary-strip").innerHTML = html;
+})();
+
+// ============================================================
+// NARRATIVE (the eureka line)
+// ============================================================
+(function renderNarrative() {
+  const txt = DATA.insights.narrative;
+  if (txt) {
+    $("narrative").innerHTML = `<span class="lead">This week's headline</span>${txt}`;
+  } else {
+    $("narrative").style.display = "none";
+  }
+})();
+
+// ============================================================
+// HIGHLIGHTS — exactly 6, centered
+// ============================================================
+(function renderHighlights() {
+  const ins = DATA.insights;
+  const cards = [];
+
+  const upTopics = ins.topic_movers.filter(m => m.delta > 0);
+  const downTopics = ins.topic_movers.filter(m => m.delta < 0);
+  const upEnts = ins.entity_movers.filter(m => m.delta > 0);
+
+  if (upTopics.length) {
+    const m = upTopics[0];
+    cards.push({ label: "Topic rising", value: m.name, valueSm: true,
+      sub: `<span class="delta-up">+${m.delta}</span> articles · ${m.prev} → ${m.last}`,
+      arrow: "Filter →",
+      onClick: () => { $("topic").value = m.name; doSearch(); switchTab("search"); } });
+  }
+  if (downTopics.length) {
+    const m = downTopics[0];
+    cards.push({ label: "Topic cooling", value: m.name, valueSm: true,
+      sub: `<span class="delta-down">${m.delta}</span> articles · ${m.prev} → ${m.last}`,
+      arrow: "Filter →",
+      onClick: () => { $("topic").value = m.name; doSearch(); switchTab("search"); } });
+  }
+  if (upEnts.length) {
+    const m = upEnts[0];
+    cards.push({ label: "Entity rising", value: m.name, valueSm: true,
+      sub: `<span class="delta-up">+${m.delta}</span> mentions · ${m.prev} → ${m.last}`,
+      arrow: "Filter →",
+      onClick: () => { $("entity").value = m.name; doSearch(); switchTab("search"); } });
+  }
+  if (ins.top_money_item) {
+    const it = ins.top_money_item;
+    cards.push({ label: "Biggest deal", value: fmtMoney(it.money),
+      sub: `<i>${escapeHtml(it.title.slice(0, 80))}${it.title.length > 80 ? "…" : ""}</i>`,
+      arrow: "Open article →",
+      onClick: () => window.open(it.link, "_blank") });
+  }
+  if (ins.top_funded_topic) {
+    const tf = ins.top_funded_topic;
+    cards.push({ label: "Top funded topic", value: fmtMoney(tf.money),
+      sub: `Topic: <b>${tf.topic}</b>`,
+      arrow: "Inspect →",
+      onClick: () => switchTab("money") });
+  }
+  if (ins.most_connected.length) {
+    const mc = ins.most_connected[0];
+    cards.push({ label: "Most connected", value: mc.name, valueSm: true,
+      sub: `Linked to ${mc.degree} entities`,
+      arrow: "Open graph →",
+      onClick: () => switchTab("graph") });
+  }
+
+  // Always exactly 6
+  const six = cards.slice(0, 6);
+  $("highlights").innerHTML = `
+    <div class="head">
+      <h2>Highlights · week ${ins.last_week || "—"}</h2>
+      <div class="meta">Auto-generated patterns · last 7 days</div>
+    </div>
+    <div class="highlight-grid">
+      ${six.map(c => `
+        <div class="hi-card">
+          <div class="l">${c.label}</div>
+          <div class="v ${c.valueSm ? "sm" : ""}">${escapeHtml(String(c.value))}</div>
+          <div class="sub">${c.sub || ""}</div>
+          <div class="arrow">${c.arrow}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+  $("highlights").querySelectorAll(".hi-card").forEach((el, i) => {
+    el.addEventListener("click", () => six[i].onClick && six[i].onClick());
+  });
+})();
+
+// ============================================================
+// TABS
+// ============================================================
+function switchTab(name) {
+  const btn = document.querySelector(`nav.tabs button[data-tab="${name}"]`);
+  if (btn) btn.click();
+}
+document.querySelectorAll("nav.tabs button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("nav.tabs button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
+    btn.classList.add("active");
+    $("pane-" + btn.dataset.tab).classList.add("active");
+    if (btn.dataset.tab === "graph") { setTimeout(drawGraph, 50); renderGraphBottom(); }
+    if (btn.dataset.tab === "money") renderMoney();
+    if (btn.dataset.tab === "spotlight") renderSpotlight();
+    if (btn.dataset.tab === "patterns") renderPatterns();
+  });
+});
+
+// ============================================================
+// DROPDOWNS
+// ============================================================
+function fillSelect(id, values) {
+  const sel = $(id);
+  for (const v of values) {
+    const opt = document.createElement("option");
+    opt.value = v; opt.textContent = v;
+    sel.appendChild(opt);
+  }
+}
+fillSelect("src", DATA.sources);
+fillSelect("topic", DATA.topics_list);
+fillSelect("region", DATA.regions);
+fillSelect("entity", Object.keys(DATA.entity_count).sort((a,b) => DATA.entity_count[b] - DATA.entity_count[a]));
+fillSelect("graphTopic", DATA.topics_list);
+
+$("from").value = DATA.stats.date_min;
+$("to").value = DATA.stats.date_max;
+
+// ============================================================
+// SEARCH
+// ============================================================
+function renderItem(it) {
+  const div = document.createElement("div");
+  div.className = "item" + (it.sel ? " curated" : "");
+  const body = it.dsum
+    ? `<div class="dsum">${escapeHtml(it.dsum)}</div>`
+    : `<div class="summary">${escapeHtml((it.sum || "").slice(0, 280))}${it.sum && it.sum.length > 280 ? "…" : ""}</div>`;
+  const entChips = it.entities.map(e => `<span class="chip" data-entity="${escapeAttr(e)}">${escapeHtml(e)}</span>`).join("");
+  const topChips = it.topics.map(t => `<span class="chip" data-topic="${escapeAttr(t)}">${escapeHtml(t)}</span>`).join("");
+  const chipRows = [];
+  if (entChips) chipRows.push(`<div class="chiprow entities"><div class="rl">Ent</div><div class="rv">${entChips}</div></div>`);
+  if (topChips) chipRows.push(`<div class="chiprow topics"><div class="rl">Tpc</div><div class="rv">${topChips}</div></div>`);
+  div.innerHTML = `
+    <div class="col-date">${it.date}</div>
+    <div>
+      <h3><a href="${escapeAttr(it.link)}" target="_blank" rel="noopener">${escapeHtml(it.title)}</a></h3>
+      ${body}
+      ${chipRows.length ? `<div class="chiprows">${chipRows.join("")}</div>` : ""}
+    </div>
+    <div class="col-side">
+      ${it.money ? `<div class="money">${fmtMoney(it.money)}</div>` : ""}
+      <div class="src">${escapeHtml(it.src)}</div>
+      <div>${it.region}</div>
+    </div>
+  `;
+  div.querySelectorAll(".chiprow.entities .chip").forEach(c =>
+    c.addEventListener("click", () => { $("entity").value = c.dataset.entity; doSearch(); }));
+  div.querySelectorAll(".chiprow.topics .chip").forEach(c =>
+    c.addEventListener("click", () => { $("topic").value = c.dataset.topic; doSearch(); }));
+  return div;
+}
+
+function doSearch() {
+  const q = $("q").value.trim().toLowerCase();
+  const from = $("from").value, to = $("to").value;
+  const src = $("src").value, topic = $("topic").value;
+  const region = $("region").value, entity = $("entity").value;
+  const onlyCurated = $("onlyCurated").checked;
+  const onlyMoney = $("onlyMoney").checked;
+  let res = DATA.items.filter(it => {
+    if (from && it.date < from) return false;
+    if (to && it.date > to) return false;
+    if (src && it.src !== src) return false;
+    if (topic && !it.topics.includes(topic)) return false;
+    if (region && it.region !== region) return false;
+    if (entity && !it.entities.includes(entity)) return false;
+    if (onlyCurated && !it.sel) return false;
+    if (onlyMoney && !it.money) return false;
+    if (q) {
+      const hay = (it.title + " " + it.sum + " " + (it.dsum || "") + " " + it.entities.join(" ")).toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  res.sort((a,b) => b.date.localeCompare(a.date) || b.i - a.i);
+  $("count").textContent = res.length;
+  const cont = $("items"); cont.innerHTML = "";
+  const cap = res.slice(0, 200);
+  for (const it of cap) cont.appendChild(renderItem(it));
+  if (res.length > 200) {
+    const more = document.createElement("div");
+    more.className = "mono-label";
+    more.style.cssText = "padding: 16px 0;";
+    more.textContent = `+ ${res.length - 200} more · refine filters to see the rest`;
+    cont.appendChild(more);
+  }
+}
+["q", "from", "to"].forEach(id => $(id).addEventListener("input", doSearch));
+["src", "topic", "region", "entity"].forEach(id => $(id).addEventListener("change", doSearch));
+["onlyCurated", "onlyMoney"].forEach(id => $(id).addEventListener("change", doSearch));
+doSearch();
+
+// ============================================================
+// STACKED BAR (breakdown by topic)
+// ============================================================
+function stackedBreakdown(entitlyName, topicMoneyMap, topicCountMap) {
+  // topicMoneyMap: { topic: $ } for one entity
+  // returns html: stacked bar + legend
+  const entries = Object.entries(topicMoneyMap)
+    .filter(([_, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1]);
+  if (!entries.length) {
+    return `<p class="mono-label">No $ identified for <b>${escapeHtml(entitlyName)}</b> across topics.</p>`;
+  }
+  const total = entries.reduce((s, [, v]) => s + v, 0);
+  const segs = entries.map(([t, v], i) => {
+    const pct = (v / total * 100).toFixed(1);
+    const cls = i === 0 ? "seg top" : "seg";
+    const showLabel = parseFloat(pct) >= 8;
+    return `<div class="${cls}" style="flex: ${v}" title="${escapeHtml(t)}: ${fmtMoney(v)} (${pct}%)">${showLabel ? `<span class="lbl">${escapeHtml(t)}</span>` : ""}</div>`;
+  }).join("");
+  const legend = entries.map(([t, v], i) => `
+    <div class="stacked-legend">
+      <span class="topic"><span class="swatch ${i === 0 ? "top" : ""}"></span>${escapeHtml(t)}</span>
+      <span class="pct">${(v / total * 100).toFixed(1)}%</span>
+      <span class="val">${fmtMoney(v)}</span>
+    </div>`).join("");
+  return `<div class="stacked">${segs}</div>${legend}`;
+}
+
+// ============================================================
+// GRAPH
+// ============================================================
+let network = null;
+function drawGraph() {
+  const minCo = parseInt($("minCo").value) || 1;
+  const topN = parseInt($("topN").value) || 60;
+  const topicFilter = $("graphTopic").value;
+  const sortBy = $("graphSort").value;
+  const win = $("graphWindow").value;
+
+  // Recompute from items if any non-ALL filter is active
+  let entityCount, coEdges;
+  if (topicFilter || win !== "ALL") {
+    const items = itemsInWindow(win).filter(it =>
+      !topicFilter || it.topics.includes(topicFilter));
+    entityCount = {};
+    const coMap = {};
+    for (const it of items) {
+      for (const e of it.entities) entityCount[e] = (entityCount[e] || 0) + 1;
+      const ents = [...new Set(it.entities)].sort();
+      for (let i = 0; i < ents.length; i++)
+        for (let j = i+1; j < ents.length; j++) {
+          const k = ents[i] + "||" + ents[j];
+          coMap[k] = (coMap[k] || 0) + 1;
+        }
+    }
+    coEdges = Object.entries(coMap).map(([k, w]) => { const [a,b]=k.split("||"); return {a,b,w}; });
+  } else { entityCount = DATA.entity_count; coEdges = DATA.co; }
+
+  const degree = {};
+  for (const e of coEdges) {
+    if (e.w >= minCo) {
+      degree[e.a] = (degree[e.a] || 0) + 1;
+      degree[e.b] = (degree[e.b] || 0) + 1;
+    }
+  }
+  let rankFn;
+  if (sortBy === "degree") rankFn = e => degree[e] || 0;
+  else if (sortBy === "money") rankFn = e => DATA.entity_money[e] || 0;
+  else rankFn = e => entityCount[e] || 0;
+  const topEntities = new Set(Object.keys(entityCount).sort((a,b) => rankFn(b) - rankFn(a)).slice(0, topN));
+
+  const nodes = [];
+  const maxCount = Math.max(1, ...[...topEntities].map(e => entityCount[e] || 0));
+  for (const e of topEntities) {
+    const c = entityCount[e] || 0;
+    const m = DATA.entity_money[e] || 0;
+    const size = 8 + 30 * Math.sqrt((c || 0) / maxCount);
+    nodes.push({
+      id: e, label: e, size,
+      title: `${e}  ·  ${c} mentions${m ? "  ·  " + fmtMoney(m) : ""}`,
+      font: { size: 11 + Math.min(6, c / 6), face: "Inter", color: "#0A0A0A" },
+    });
+  }
+  const edges = coEdges
+    .filter(e => e.w >= minCo && topEntities.has(e.a) && topEntities.has(e.b))
+    .map(e => ({ from: e.a, to: e.b, value: e.w,
+      title: `${e.a} ↔ ${e.b}  ·  ${e.w} co-mentions`,
+      width: Math.min(6, 0.4 + e.w * 0.5) }));
+  $("graph-info").textContent = `${nodes.length} nodes · ${edges.length} edges`;
+
+  const visData = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+  const options = {
+    nodes: { shape: "dot", color: { background: "#0A0A0A", border: "#0A0A0A",
+        highlight: { background: "#9C6B2B", border: "#9C6B2B" },
+        hover: { background: "#0A0A0A", border: "#9C6B2B" } },
+      borderWidth: 1, labelHighlightBold: false },
+    edges: { color: { color: "rgba(10,10,10,0.18)", highlight: "#9C6B2B", hover: "#9C6B2B" }, smooth: false },
+    physics: { barnesHut: { gravitationalConstant: -7000, springLength: 130, springConstant: 0.035 },
+      stabilization: { iterations: 250 } },
+    interaction: { hover: true, tooltipDelay: 100, hideEdgesOnDrag: false },
+  };
+  if (network) network.destroy();
+  network = new vis.Network($("graph"), visData, options);
+  network.on("click", (params) => { if (params.nodes.length) showEntityDetail(params.nodes[0]); });
+}
+
+function showEntityDetail(entity) {
+  const count = DATA.entity_count[entity] || 0;
+  const money = DATA.entity_money[entity] || 0;
+  const series = DATA.entity_series[entity] || [];
+  const coWith = DATA.co
+    .filter(e => e.a === entity || e.b === entity)
+    .map(e => ({ other: e.a === entity ? e.b : e.a, w: e.w }))
+    .sort((a,b) => b.w - a.w).slice(0, 5);  // top 5 only
+
+  // Stacked breakdown by topic (top 4, collapse rest into "other")
+  const breakdown = DATA.ent_topic_money[entity] || null;
+  let breakdownHtml = "";
+  if (breakdown) {
+    const entries = Object.entries(breakdown).filter(([_, v]) => v > 0).sort((a, b) => b[1] - a[1]);
+    if (entries.length) {
+      const top = entries.slice(0, 4);
+      const rest = entries.slice(4);
+      const restSum = rest.reduce((s, [, v]) => s + v, 0);
+      const all = restSum > 0 ? [...top, ["other", restSum]] : top;
+      const total = all.reduce((s, [, v]) => s + v, 0);
+      const segs = all.map(([t, v], i) => {
+        const pct = (v / total * 100).toFixed(1);
+        const cls = i === 0 ? "seg top" : "seg";
+        const showLabel = parseFloat(pct) >= 14;
+        return `<div class="${cls}" style="flex: ${v}" title="${escapeHtml(t)}: ${fmtMoney(v)} (${pct}%)">${showLabel ? `<span class="lbl">${escapeHtml(t)}</span>` : ""}</div>`;
+      }).join("");
+      const legend = all.map(([t, v], i) => `
+        <div class="stacked-legend">
+          <span class="topic"><span class="swatch ${i === 0 ? "top" : ""}"></span>${escapeHtml(t)}</span>
+          <span class="pct">${(v / total * 100).toFixed(1)}%</span>
+          <span class="val">${fmtMoney(v)}</span>
+        </div>`).join("");
+      breakdownHtml = `<h4>$ breakdown by topic</h4><div class="stacked">${segs}</div>${legend}`;
+    }
+  }
+
+  $("graph-side").innerHTML = `
+    <h3>${escapeHtml(entity)}</h3>
+    <div class="kv-grid" style="margin-bottom: 14px;">
+      <div class="row"><span class="k">Mentions</span><span class="v">${count}</span></div>
+      <div class="row"><span class="k">$ accrued</span><span class="v">${fmtMoney(money) || "—"}</span></div>
+    </div>
+    <div style="color: var(--ink); margin-bottom: 2px;">${sparkbars(series, { w: 360, h: 38, labels: DATA.dates })}</div>
+    <div class="mono-label" style="font-size:9px;">Daily mentions · hover for date</div>
+    ${breakdownHtml}
+    ${coWith.length ? `<h4>Top co-mentions</h4><div class="colist">${coWith.map(c => `<div class="crow"><span class="k">${escapeHtml(c.other)}</span><span class="v">${c.w}</span></div>`).join("")}</div>` : ""}
+  `;
+}
+
+window.filterBySearch = function(field, value) {
+  $(field).value = value; doSearch(); switchTab("search");
+};
+
+$("redraw").addEventListener("click", drawGraph);
+$("resetZoom").addEventListener("click", () => network && network.fit());
+["minCo", "topN", "graphTopic", "graphSort", "graphWindow"].forEach(id => $(id).addEventListener("change", drawGraph));
+
+function renderGraphBottom() {
+  const mentionRows = Object.entries(DATA.entity_count).sort((a,b) => b[1] - a[1]).slice(0, 12)
+    .map(([k,v]) => ({ label: k, val: v }));
+  renderBarTable("g-top-mentions", mentionRows, (v) => String(v), (label) => {
+    if (network) { try { network.selectNodes([label]); network.focus(label, { scale: 1.2, animation: true }); } catch(e) {} }
+    showEntityDetail(label);
+  });
+  const pairRows = DATA.co.slice().sort((a,b) => b.w - a.w).slice(0, 12)
+    .map(p => ({ label: `${p.a} ↔ ${p.b}`, val: p.w, a: p.a, b: p.b }));
+  renderBarTable("g-top-pairs", pairRows, (v) => String(v), (label) => {
+    const row = pairRows.find(r => r.label === label);
+    if (row && network) { try { network.selectNodes([row.a, row.b]); network.fit({ nodes: [row.a, row.b], animation: true }); } catch(e) {} }
+  });
+  const moneyRows = Object.entries(DATA.entity_money).filter(([_,v]) => v > 0).sort((a,b) => b[1] - a[1]).slice(0, 12)
+    .map(([k,v]) => ({ label: k, val: v }));
+  renderBarTable("g-top-money", moneyRows, fmtMoney, (label) => {
+    if (network) { try { network.selectNodes([label]); network.focus(label, { scale: 1.2, animation: true }); } catch(e) {} }
+    showEntityDetail(label);
+  });
+}
+
+// ============================================================
+// SHARED bar table
+// ============================================================
+function renderBarTable(containerId, rows, valFmt, onClick, activeLabel) {
+  const cont = $(containerId); cont.innerHTML = "";
+  if (!rows.length) { cont.innerHTML = '<p class="mono-label">No data</p>'; return; }
+  const maxVal = rows[0].val;
+  rows.forEach((r, idx) => {
+    const div = document.createElement("div");
+    const cls = "row" + (onClick ? " clickable" : "") + (activeLabel === r.label ? " active" : "");
+    div.className = cls;
+    const isTop = idx === 0;
+    div.innerHTML = `
+      <div class="lbl">${escapeHtml(r.label)}</div>
+      <div class="bar"><div class="fill ${isTop ? "top" : ""}" style="width:${(r.val/maxVal*100).toFixed(1)}%"></div></div>
+      <div class="v">${valFmt(r.val)}</div>
+    `;
+    if (onClick) div.addEventListener("click", () => onClick(r.label));
+    cont.appendChild(div);
+  });
+}
+
+// ============================================================
+// MONEY — window selector + sankey + pareto
+// ============================================================
+let moneyWindow = "ALL";
+
+function itemsInWindow(win) {
+  if (win === "ALL") return DATA.items;
+  const days = { "7D": 7, "15D": 15, "30D": 30, "3M": 90 }[win];
+  if (!days) return DATA.items;
+  const dateMax = DATA.stats.date_max;
+  const d = new Date(dateMax + "T00:00:00Z");
+  d.setUTCDate(d.getUTCDate() - (days - 1));
+  const cutoff = d.toISOString().slice(0, 10);
+  return DATA.items.filter(it => it.date >= cutoff);
+}
+
+function aggregateMoney(items) {
+  // Return { entMoney, topMoney, entTopMoney }
+  const entMoney = {}, topMoney = {}, entTopMoney = {};
+  for (const it of items) {
+    if (!it.money) continue;
+    for (const e of it.entities) {
+      entMoney[e] = (entMoney[e] || 0) + it.money;
+      if (!entTopMoney[e]) entTopMoney[e] = {};
+      for (const t of it.topics) {
+        topMoney[t] = (topMoney[t] || 0) + it.money;
+        entTopMoney[e][t] = (entTopMoney[e][t] || 0) + it.money;
+      }
+    }
+  }
+  return { entMoney, topMoney, entTopMoney };
+}
+
+// ---- Sankey diagram (Axioma monochrome, large + airy labels) ----
+function renderSankey(agg) {
+  const { entMoney, topMoney, entTopMoney } = agg;
+  const MAX_ENTS = 8;
+  const topEnts = Object.entries(entMoney).sort((a,b) => b[1] - a[1]).slice(0, MAX_ENTS);
+  const topTops = Object.entries(topMoney).sort((a,b) => b[1] - a[1]);
+  if (!topEnts.length || !topTops.length) {
+    return '<p class="mono-label" style="padding: 24px 0;">No $ flow in this window.</p>';
+  }
+
+  const W = 1200, H = 620;
+  const LABEL_L = 170, LABEL_R = 170, slabW = 18;
+  const leftX = LABEL_L, rightX = W - LABEL_R - slabW;
+  const MIN_SLAB = 28;     // minimum height so labels never collide
+  const padY = 8;
+
+  const totalE = topEnts.reduce((s, [, v]) => s + v, 0);
+  const totalT = topTops.reduce((s, [, v]) => s + v, 0);
+
+  // Allocate slab heights with minimum guarantee
+  function allocate(items, total, count, hAvail) {
+    const minTotal = MIN_SLAB * count;
+    const flexTotal = Math.max(0, hAvail - minTotal);
+    return items.map(([k, v]) => {
+      const flexShare = (v / total) * flexTotal;
+      return [k, v, MIN_SLAB + flexShare];
+    });
+  }
+  const eHeights = allocate(topEnts, totalE, topEnts.length, H - padY * (topEnts.length - 1));
+  const tHeights = allocate(topTops, totalT, topTops.length, H - padY * (topTops.length - 1));
+
+  // Position entity slabs
+  const eY = {};
+  let yE = 0;
+  for (const [e, v, h] of eHeights) {
+    eY[e] = { top: yE, bottom: yE + h, total: v };
+    yE += h + padY;
+  }
+  // Position topic slabs
+  const tY = {};
+  let yT = 0;
+  for (const [t, v, h] of tHeights) {
+    tY[t] = { top: yT, bottom: yT + h, total: v };
+    yT += h + padY;
+  }
+
+  // Build ribbons
+  const ribbons = [];
+  const orderedTopics = topTops.map(([t]) => t);
+  for (const [e, eTotal] of topEnts) {
+    let yOffset = eY[e].top;
+    const cells = entTopMoney[e] || {};
+    for (const t of orderedTopics) {
+      const v = cells[t] || 0;
+      if (v <= 0) continue;
+      const ribH = (v / eTotal) * (eY[e].bottom - eY[e].top);
+      ribbons.push({ entity: e, topic: t, value: v, leftY1: yOffset, leftY2: yOffset + ribH });
+      yOffset += ribH;
+    }
+  }
+  const entOrderIndex = new Map(topEnts.map(([e], i) => [e, i]));
+  for (const t of orderedTopics) {
+    const tRibs = ribbons.filter(r => r.topic === t)
+      .sort((a, b) => entOrderIndex.get(a.entity) - entOrderIndex.get(b.entity));
+    let yOffset = tY[t].top;
+    for (const r of tRibs) {
+      const ribH = (r.value / tY[t].total) * (tY[t].bottom - tY[t].top);
+      r.rightY1 = yOffset;
+      r.rightY2 = yOffset + ribH;
+      yOffset += ribH;
+    }
+  }
+
+  let svg = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: auto; max-width: 1200px;">`;
+
+  // Ribbons first
+  const maxRibValue = Math.max(...ribbons.map(r => r.value));
+  for (const r of ribbons) {
+    const x1 = leftX + slabW;
+    const x2 = rightX;
+    const midX = (x1 + x2) / 2;
+    const path = `M ${x1} ${r.leftY1}
+                  C ${midX} ${r.leftY1}, ${midX} ${r.rightY1}, ${x2} ${r.rightY1}
+                  L ${x2} ${r.rightY2}
+                  C ${midX} ${r.rightY2}, ${midX} ${r.leftY2}, ${x1} ${r.leftY2} Z`;
+    const isTop = r.value === maxRibValue;
+    const fill = isTop ? "rgba(156,107,43,0.55)" : "rgba(10,10,10,0.12)";
+    svg += `<path d="${path}" fill="${fill}" stroke="none"><title>${escapeHtml(r.entity)} → ${escapeHtml(r.topic)} · ${fmtMoney(r.value)}</title></path>`;
+  }
+
+  // Entity slabs (left)
+  for (const [e, v, h] of eHeights) {
+    const p = eY[e];
+    svg += `<rect x="${leftX}" y="${p.top}" width="${slabW}" height="${p.bottom - p.top}" fill="#0A0A0A"><title>${escapeHtml(e)} · ${fmtMoney(v)}</title></rect>`;
+    const yMid = (p.top + p.bottom) / 2;
+    svg += `<text x="${leftX - 12}" y="${yMid - 4}" font-size="15" text-anchor="end" dominant-baseline="middle" fill="#0A0A0A" font-weight="500" font-family="Fraunces, serif">${escapeHtml(e)}</text>`;
+    svg += `<text x="${leftX - 12}" y="${yMid + 12}" font-size="11" text-anchor="end" dominant-baseline="middle" fill="#A8A39A" font-family="IBM Plex Mono, monospace">${fmtMoney(v)}</text>`;
+  }
+
+  // Topic slabs (right)
+  for (const [t, v, h] of tHeights) {
+    const p = tY[t];
+    svg += `<rect x="${rightX}" y="${p.top}" width="${slabW}" height="${p.bottom - p.top}" fill="#0A0A0A"><title>${escapeHtml(t)} · ${fmtMoney(v)}</title></rect>`;
+    const yMid = (p.top + p.bottom) / 2;
+    svg += `<text x="${rightX + slabW + 12}" y="${yMid - 4}" font-size="15" text-anchor="start" dominant-baseline="middle" fill="#0A0A0A" font-weight="500" font-family="Fraunces, serif">${escapeHtml(t)}</text>`;
+    svg += `<text x="${rightX + slabW + 12}" y="${yMid + 12}" font-size="11" text-anchor="start" dominant-baseline="middle" fill="#A8A39A" font-family="IBM Plex Mono, monospace">${fmtMoney(v)}</text>`;
+  }
+
+  // Header labels at top of each column
+  svg += `<text x="${leftX - 12}" y="-8" font-size="10" text-anchor="end" fill="#A8A39A" font-family="IBM Plex Mono, monospace" letter-spacing="1.5">ENTITIES</text>`;
+  svg += `<text x="${rightX + slabW + 12}" y="-8" font-size="10" text-anchor="start" fill="#A8A39A" font-family="IBM Plex Mono, monospace" letter-spacing="1.5">TOPICS</text>`;
+
+  svg += `</svg>`;
+  return svg;
+}
+
+function renderMoney() {
+  const items = itemsInWindow(moneyWindow);
+  const nMoney = items.filter(it => it.money > 0).length;
+  const winLabel = { "7D": "last 7 days", "15D": "last 15 days", "30D": "last 30 days", "ALL": "all time" }[moneyWindow];
+  $("money-window-info").textContent = `${items.length} items · ${nMoney} with $ identified · ${winLabel}`;
+
+  const agg = aggregateMoney(items);
+  $("sankey-wrap").innerHTML = renderSankey(agg);
+}
+
+$("money-winswitch").addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-win]");
+  if (!btn) return;
+  moneyWindow = btn.dataset.win;
+  document.querySelectorAll("#money-winswitch button").forEach(b => b.classList.toggle("active", b === btn));
+  renderMoney();
+});
+
+// ============================================================
+// SPOTLIGHT (Tab 04 redesign)
+// ============================================================
+let spotWindow = "7D";
+$("winswitch").addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-win]");
+  if (!btn) return;
+  spotWindow = btn.dataset.win;
+  document.querySelectorAll("#winswitch button").forEach(b => b.classList.toggle("active", b === btn));
+  renderSpotlight();
+});
+
+function renderSpotlight() {
+  const sp = DATA.spotlight[spotWindow];
+  if (!sp) return;
+  $("spot-window-info").textContent = `${sp.n_items} items · since ${sp.from_date}`;
+
+  function col(title, items, kind) {
+    if (!items.length) return `<div class="spot-col"><div class="colhead">${title}</div><p class="mono-label">No data in this window.</p></div>`;
+    const top = items[0];
+    const rest = items.slice(1, 6);
+    return `
+      <div class="spot-col">
+        <div class="colhead">${title}</div>
+        <div class="star">
+          <div class="name">${escapeHtml(top.name)}</div>
+          <div class="stats">
+            <b>${top.count}</b> ${kind === "bigrams" ? "occurrences" : kind === "entities" ? "mentions" : "articles"}
+            ${top.money ? ` · <b>${fmtMoney(top.money)}</b>` : ""}
+          </div>
+        </div>
+        <div class="rest">
+          ${rest.map((r, i) => `
+            <div class="item-row" data-kind="${kind}" data-name="${escapeAttr(r.name)}">
+              <span class="rank">0${i + 2}</span>
+              <span class="name">${escapeHtml(r.name)}</span>
+              <span class="v">${r.count}${r.money ? " · " + fmtMoney(r.money) : ""}</span>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  $("spot-grid").innerHTML =
+    col("Entities", sp.entities, "entities") +
+    col("Topics", sp.topics, "topics") +
+    col("Bigrams", sp.bigrams, "bigrams");
+
+  $("spot-grid").querySelectorAll(".item-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const kind = row.dataset.kind, name = row.dataset.name;
+      if (kind === "entities") { $("entity").value = name; doSearch(); switchTab("search"); }
+      else if (kind === "topics") { $("topic").value = name; doSearch(); switchTab("search"); }
+      else if (kind === "bigrams") { $("q").value = name; doSearch(); switchTab("search"); }
+    });
+  });
+  // Also wire the star (top 1)
+  $("spot-grid").querySelectorAll(".spot-col").forEach((col, idx) => {
+    const star = col.querySelector(".star");
+    if (!star) return;
+    star.style.cursor = "pointer";
+    star.addEventListener("click", () => {
+      const kinds = ["entities", "topics", "bigrams"];
+      const items = [sp.entities, sp.topics, sp.bigrams][idx];
+      if (!items.length) return;
+      const name = items[0].name;
+      const kind = kinds[idx];
+      if (kind === "entities") { $("entity").value = name; doSearch(); switchTab("search"); }
+      else if (kind === "topics") { $("topic").value = name; doSearch(); switchTab("search"); }
+      else if (kind === "bigrams") { $("q").value = name; doSearch(); switchTab("search"); }
+    });
+  });
+}
+
+// ============================================================
+// PATTERNS — crosstab first
+// ============================================================
+function weeklyArray(weeklyMap, name, weeks) {
+  return weeks.map(w => (weeklyMap[name] && weeklyMap[name][w]) || 0);
+}
+function renderTrendRows(containerId, weeklyMap, totals, top, onClick) {
+  const cont = $(containerId); cont.innerHTML = "";
+  const weeks = DATA.weeks;
+  const labels = weeks.map(w => DATA.week_labels[w] || w);
+  for (const name of top) {
+    const series = weeklyArray(weeklyMap, name, weeks);
+    const total = totals[name] || 0;
+    const row = document.createElement("div");
+    row.className = "trend-row" + (onClick ? " clickable" : "");
+    row.innerHTML = `
+      <div class="lbl">${escapeHtml(name)}</div>
+      <div class="spark">${sparkbars(series, { w: 240, h: 32, labels })}</div>
+      <div class="v">${total}</div>
+    `;
+    if (onClick) row.addEventListener("click", () => onClick(name));
+    cont.appendChild(row);
+  }
+}
+
+function renderWeekAxis(containerId) {
+  const weeks = DATA.weeks;
+  // Show abbreviated label "Wxx · Apr 27" per week
+  function shortLabel(w) {
+    const full = DATA.week_labels[w] || w;
+    // "W17 · Apr 27 – May 3" -> "W17 · Apr 27"
+    const dash = full.indexOf("–");
+    return dash > 0 ? full.slice(0, dash).trim() : full;
+  }
+  const ticks = weeks.map(w => `<span>${escapeHtml(shortLabel(w))}</span>`).join("");
+  $(containerId).innerHTML = `<div></div><div class="ticks">${ticks}</div><div></div>`;
+}
+function renderCrosstab() {
+  const ents = DATA.ent_topic_entities;
+  const tops = DATA.ent_topic_topics;
+  const m = DATA.ent_topic_matrix;
+  let maxVal = 0;
+  for (const e of ents) for (const t of tops) maxVal = Math.max(maxVal, m[e][t]);
+  let html = '<thead><tr><th class="entity">Entity \\ Topic</th>';
+  for (const t of tops) html += `<th class="topic">${escapeHtml(t)}</th>`;
+  html += '<th class="topic">Total</th></tr></thead><tbody>';
+  for (const e of ents) {
+    html += `<tr><td class="label">${escapeHtml(e)}</td>`;
+    let rowTotal = 0;
+    for (const t of tops) {
+      const v = m[e][t];
+      rowTotal += v;
+      const intensity = v / maxVal;
+      const bg = v ? `rgba(10,10,10,${(0.05 + intensity * 0.6).toFixed(2)})` : "transparent";
+      html += `<td class="cell" style="background:${bg}">${v || ""}</td>`;
+    }
+    html += `<td class="total">${rowTotal}</td></tr>`;
+  }
+  html += '<tr><td class="label" style="font-weight:600;">Total</td>';
+  for (const t of tops) {
+    const colTotal = ents.reduce((s, e) => s + m[e][t], 0);
+    html += `<td class="total">${colTotal}</td>`;
+  }
+  html += '<td class="total"></td></tr></tbody>';
+  $("crosstab").innerHTML = html;
+}
+function renderPatterns() {
+  renderCrosstab();
+  const lastWeek = DATA.weeks[DATA.weeks.length - 1];
+  $("legend-current-week").textContent = DATA.week_labels[lastWeek] || lastWeek;
+  const topicNames = DATA.topics_list;
+  renderTrendRows("topic-trend", DATA.topic_weekly, DATA.topic_count, topicNames, (name) => {
+    $("topic").value = name; doSearch(); switchTab("search");
+  });
+  renderWeekAxis("topic-week-axis");
+  const entNames = Object.keys(DATA.entity_count).sort((a,b) => DATA.entity_count[b] - DATA.entity_count[a]).slice(0, 12);
+  renderTrendRows("entity-trend", DATA.entity_weekly, DATA.entity_count, entNames, (name) => {
+    $("entity").value = name; doSearch(); switchTab("search");
+  });
+  renderWeekAxis("entity-week-axis");
+}
+
+</script>
+</body>
+</html>
