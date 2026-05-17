@@ -27,10 +27,10 @@ from telegram_client import escape_html, send_message
 
 # ---- Carga de config ---------------------------------------------------------
 
-_CENTRAL_SECRETS_WINDOWS = Path("C:/Users/supip/.secrets/credentials.env")
+_CENTRAL_SECRETS_WINDOWS = Path.home() / ".secrets" / "credentials.env"
 _CENTRAL_SECRETS_UNIX = Path.home() / ".env"
 
-# Prod (EC2): ~/.env — Dev (Windows): C:\Users\supip\.secrets\credentials.env
+# Prod (EC2): ~/.env  —  Dev (Windows): %USERPROFILE%\.secrets\credentials.env
 if _CENTRAL_SECRETS_WINDOWS.exists():
     load_dotenv(_CENTRAL_SECRETS_WINDOWS)
 elif _CENTRAL_SECRETS_UNIX.exists():

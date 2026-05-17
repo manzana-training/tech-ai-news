@@ -11,7 +11,7 @@ Escribe un unico `dashboard.html` autocontenido (datos inline como JSON).
 Sin servidor, sin DB. Abrir en el browser.
 
 Uso:
-    cd "C:/Users/supip/OneDrive/Documentos/Tech AI News"
+    cd <repo-root>
     python analysis/build_dashboard.py
     # -> dashboard.html en la raiz del proyecto
 """
