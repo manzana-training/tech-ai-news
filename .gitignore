@@ -33,6 +33,7 @@ digest.log
 # Personal / internal — not for public repo
 CLAUDE.md
 deploy/
+SIGUIENTE_SESION.md
 
 # Build artifacts (regenerated locally)
 # Note: index.html IS committed (it's the public dashboard)
