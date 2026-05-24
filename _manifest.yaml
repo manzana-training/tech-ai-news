@@ -1,0 +1,112 @@
+# Sub-manifest del proyecto Tech AI News
+# Schema: §4.2 del PRD /alejandria-platform v1.
+# /alejandria-platform delega aquí cuando audita dim 6 (sub_manifest_health).
+
+version: 1
+project_id: Tech AI News
+declared_by: gerardo
+last_updated: 2026-05-24
+parent_manifest: ../_workspace_manifest.yaml
+
+structure:
+  compliance: ENFORCED
+  required_dirs:
+    - analysis
+    - deploy
+  required_files:
+    - CLAUDE.md
+    - README.md
+    - requirements.txt
+    - news_digest.py
+    - sources.py
+    - taxonomy.py
+    - prompts.py
+    - telegram_client.py
+    - .env.example
+  forbidden_dirs:
+    - __pycache__
+    - .pytest_cache
+    - history              # gitignored, vive en EC2 (auditoría JSONL)
+    - history.bak.2026-05-17  # backup local, no debe seguir creciendo
+
+artifacts:
+  scripts:
+    - path: news_digest.py
+      runs_on: ec2_starlan
+      cron: "0 18 * * *"             # 12:00 PM CDMX (UTC-6)
+      cron_tz: UTC                   # crontab de EC2 es UTC puro
+      status: PUBLISHED
+      purpose: Digest diario de noticias IA/tech a Telegram
+
+  modules:
+    - path: sources.py
+      purpose: Whitelist de RSS + source_type
+      status: PUBLISHED
+    - path: taxonomy.py
+      purpose: Clasificación local (topics/entities/region) — vocab cerrado 13 topics
+      status: PUBLISHED
+    - path: prompts.py
+      purpose: Prompt de curación para Claude Haiku
+      status: PUBLISHED
+    - path: telegram_client.py
+      purpose: Wrapper del Telegram Bot API
+      status: PUBLISHED
+
+  data:
+    - path: history/        # gitignored, vive solo en EC2
+      purpose: JSONL append-only por día con todos los items (auditoría + análisis DuckDB)
+      status: PUBLISHED
+      location: ec2_starlan:~/tech-ai-news/history/
+
+env_pattern:
+  central: true
+  central_file: ~/.secrets/credentials.env
+  local: .env
+  example: .env.example
+  expected_keys_local_only:
+    - TELEGRAM_CHAT_ID
+    - LOOKBACK_HOURS
+    - LOG_LEVEL
+  shared_with_central:
+    - ANTHROPIC_API_KEY
+    - TELEGRAM_BOT_TOKEN
+
+cross_imports: []   # Tech AI News no consume nada cross-project
+
+deployment:
+  ec2_alias: starlan
+  ec2_ip: 18.217.158.206
+  ec2_path: ~/tech-ai-news/
+  python_version: "3.9.25"
+  os: amazon_linux_2023
+  deploy_rule: |
+    Mismo EC2 que Starlan. Cron `0 18 * * *` UTC appended al crontab existente
+    de Starlan (backup en ~/crontab.bak.YYYYMMDD). Secretos en ~/tech-ai-news/.env
+    con permisos 600 (NO se sincronizan con ~/.secrets/ de Windows — fuentes
+    separadas a propósito).
+  operational_commands:
+    logs: ssh starlan 'tail -n 50 ~/tech-ai-news/digest.log'
+    manual_run: ssh starlan 'cd ~/tech-ai-news && .venv/bin/python news_digest.py'
+    view_cron: ssh starlan 'crontab -l'
+    update_code: scp <archivo> starlan:~/tech-ai-news/
+
+external_dependencies:
+  - id: anthropic_api
+    model: claude-haiku-4-5-20251001
+    cost_estimate_usd_month: 0.30-1.00
+    purpose: Curación y resumen de titulares
+  - id: telegram_bot_api
+    cost: free
+    purpose: Entrega del digest
+  - id: rss_feeds
+    whitelist:
+      - TechCrunch
+      - The Verge
+      - Ars Technica
+      - Wired
+      - MIT Technology Review
+      - VentureBeat
+      - Anthropic Blog
+      - OpenAI Blog
+      - Google DeepMind Blog
+      - Hacker News
