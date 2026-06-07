@@ -916,7 +916,7 @@
         <select id="graphSort">
           <option value="count">Mentions</option>
           <option value="degree">Degree</option>
-          <option value="money">$ accrued</option>
+          <option value="money">$ in headlines</option>
         </select>
       </label>
       <button class="cta" id="redraw">Redraw →</button>
@@ -941,7 +941,7 @@
         <div class="bartable compact" id="g-top-pairs"></div>
       </div>
       <div>
-        <h4>Top entities by $ accrued</h4>
+        <h4>Top entities by $ in headlines</h4>
         <p class="sub">Sum of headline $ across articles</p>
         <div class="bartable compact" id="g-top-money"></div>
       </div>
@@ -960,10 +960,10 @@
       </div>
       <div class="desc" id="money-window-info"></div>
     </div>
-    <p class="legend"><b>M</b> = million (10⁶) · <b>B</b> = billion (10⁹) · <b>T</b> = trillion (10¹²) — US convention, all USD. Sankey: width proportional to $ accrued.</p>
+    <p class="legend"><b>M</b> = million (10⁶) · <b>B</b> = billion (10⁹) · <b>T</b> = trillion (10¹²) — US convention, all USD. Sankey width = headline $ co-attributed to each entity/topic (a deal is credited to every name it mentions, so ribbons do not sum to real capital).</p>
 
-    <h3 class="section-h">Money flow · entities → topics</h3>
-    <p class="mono-label">Each slab's height is proportional to total $ that entity/topic accrued. Ribbons connect them; the largest flow is in ochre.</p>
+    <h3 class="section-h">Headline $ · entities → topics</h3>
+    <p class="mono-label">Slab height = headline $ co-attributed to that entity/topic, not capital that flowed to it. Read it as where the money-talk concentrates. Largest ribbon in ochre.</p>
     <div class="sankey-wrap" id="sankey-wrap"></div>
   </section>
 
@@ -1425,7 +1425,7 @@ function showEntityDetail(entity) {
     <h3>${escapeHtml(entity)}</h3>
     <div class="kv-grid" style="margin-bottom: 14px;">
       <div class="row"><span class="k">Mentions</span><span class="v">${count}</span></div>
-      <div class="row"><span class="k">$ accrued</span><span class="v">${fmtMoney(money) || "—"}</span></div>
+      <div class="row"><span class="k">$ in headlines</span><span class="v">${fmtMoney(money) || "—"}</span></div>
     </div>
     <div style="color: var(--ink); margin-bottom: 2px;">${sparkbars(series, { w: 360, h: 38, labels: DATA.dates })}</div>
     <div class="mono-label" style="font-size:9px;">Daily mentions · hover for date</div>
