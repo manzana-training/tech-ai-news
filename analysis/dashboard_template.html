@@ -988,6 +988,15 @@
       <div>
         <h3 class="section-h">Entity × topic affinity</h3>
         <p class="mono-label">Articles where both appear. Darker = stronger.</p>
+        <div class="spot-head">
+          <div class="winswitch" id="patterns-winswitch">
+            <button data-win="7D">7 Days</button>
+            <button data-win="30D">30 Days</button>
+            <button data-win="3M">90 Days</button>
+            <button data-win="ALL" class="active">All time</button>
+          </div>
+          <div class="desc" id="patterns-window-info"></div>
+        </div>
         <div class="crosstab-wrap">
           <table class="crosstab" id="crosstab"></table>
         </div>
@@ -1764,10 +1773,41 @@ function renderWeekAxis(containerId) {
   const ticks = weeks.map(w => `<span>${escapeHtml(shortLabel(w))}</span>`).join("");
   $(containerId).innerHTML = `<div></div><div class="ticks">${ticks}</div><div></div>`;
 }
+// Patterns crosstab — window-filtered (recomputed client-side from items).
+// Entity/topic axes stay fixed (all-time top set) so the table layout is stable
+// across windows; only the cell counts change with the selected window.
+let patternsWindow = "ALL";
+
+function crosstabMatrix(items, ents, tops) {
+  const entSet = new Set(ents), topSet = new Set(tops);
+  const m = {};
+  for (const e of ents) { m[e] = {}; for (const t of tops) m[e][t] = 0; }
+  for (const it of items) {
+    for (const e of it.entities) {
+      if (!entSet.has(e)) continue;
+      for (const t of it.topics) {
+        if (topSet.has(t)) m[e][t] += 1;
+      }
+    }
+  }
+  return m;
+}
+
+$("patterns-winswitch").addEventListener("click", (ev) => {
+  const btn = ev.target.closest("button[data-win]");
+  if (!btn) return;
+  patternsWindow = btn.dataset.win;
+  document.querySelectorAll("#patterns-winswitch button").forEach(b => b.classList.toggle("active", b === btn));
+  renderCrosstab();
+});
+
 function renderCrosstab() {
   const ents = DATA.ent_topic_entities;
   const tops = DATA.ent_topic_topics;
-  const m = DATA.ent_topic_matrix;
+  const items = itemsInWindow(patternsWindow);
+  const m = patternsWindow === "ALL" ? DATA.ent_topic_matrix : crosstabMatrix(items, ents, tops);
+  const winLabel = { "7D": "last 7 days", "30D": "last 30 days", "3M": "last 90 days", "ALL": "all time" }[patternsWindow];
+  $("patterns-window-info").textContent = `${items.length} items · ${winLabel}`;
   let maxVal = 0;
   for (const e of ents) for (const t of tops) maxVal = Math.max(maxVal, m[e][t]);
   let html = '<thead><tr><th class="entity">Entity \\ Topic</th>';
