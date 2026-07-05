@@ -206,7 +206,7 @@
   }
 
   /* ============== HIGHLIGHTS ============== */
-  .highlights { border-bottom: 1px solid var(--rule-strong); padding-bottom: 32px; margin-bottom: 32px; }
+  .highlights { border-bottom: 1px solid var(--rule-strong); padding-bottom: 22px; margin-bottom: 24px; }
   .highlights .head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 16px; }
   .highlights .head h2 { font-family: var(--serif); font-weight: 500; font-size: var(--fs-h2); margin: 0; }
   .highlights .head .meta { font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: var(--ls-label); color: var(--gray); }
@@ -215,7 +215,7 @@
     .highlight-grid { grid-template-columns: 1fr; }
   }
   .hi-card {
-    padding: 24px 20px;
+    padding: 14px 16px 16px;
     border-right: 1px solid var(--rule);
     border-top: 1px solid var(--rule);
     cursor: pointer;
@@ -225,19 +225,19 @@
   .hi-card:nth-child(3n) { border-right: none; }
   .hi-card .l {
     font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
-    letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 12px;
+    letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 6px;
   }
   .hi-card .v {
     /* 32px (no --fs-display): los 6 tiles no deben gritarle al headline semanal */
     font-family: var(--serif); font-weight: 500; font-size: 32px;
-    line-height: 1.05; margin-bottom: 10px;
+    line-height: 1.05; margin-bottom: 6px;
   }
   .hi-card .v.sm { font-size: 20px; line-height: 1.25; }
   .hi-card .sub { font-family: var(--sans); font-size: var(--fs-small); color: var(--ink-soft); line-height: 1.4; }
   .hi-card .sub .delta-up { font-weight: 600; }
   .hi-card .sub .delta-down { color: var(--gray); }
   .hi-card .arrow {
-    margin-top: 12px;
+    margin-top: 8px;
     font-family: var(--mono); font-size: var(--fs-label); text-transform: uppercase;
     letter-spacing: var(--ls-label); color: var(--ink);
   }
@@ -1153,7 +1153,7 @@ const TABBANDS = {
   graph:     ["02", "The co-mention network", "45%"],
   money:     ["03", "Where the money concentrates", "50%"],
   spotlight: ["04", "Stars of the window", "80%"],
-  patterns:  ["05", "Signals over time", "70%"],
+  patterns:  ["05", "Signals over time", "50%"],
 };
 function updateBand(tab) {
   const band = $("tabband");
