@@ -152,6 +152,25 @@ def load_items() -> list[dict]:
     return list(by_id.values())
 
 
+def load_editorial() -> dict | None:
+    """Ultimo brief semanal de analysis/editorial/ (generado por build_editorial.py).
+
+    Devuelve None si no hay ninguno — el dashboard se construye igual sin tab Brief.
+    Si el webp referenciado no existe en disco, anula `image` (layout lo tolera).
+    """
+    editorial_dir = Path(__file__).resolve().parent / "editorial"
+    candidates = sorted(editorial_dir.glob("*-W*.json"))
+    if not candidates:
+        return None
+    try:
+        ed = json.loads(candidates[-1].read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+    if ed.get("image") and not (ROOT / ed["image"]).exists():
+        ed["image"] = None
+    return ed
+
+
 def week_key(date_str: str) -> str:
     d = datetime.date.fromisoformat(date_str)
     y, w, _ = d.isocalendar()
@@ -536,6 +555,7 @@ def build_data() -> dict:
 
     return {
         "generated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "editorial": load_editorial(),
         "items": pack,
         "stats": {
             "n_items": len(items),

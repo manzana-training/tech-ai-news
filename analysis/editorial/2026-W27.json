@@ -1,0 +1,18 @@
+{
+  "week": "2026-W27",
+  "week_label": "2026 · Week 27",
+  "date_range": "Week of Jun 29 – Jul 04, 2026",
+  "generated_at": "Jul 05, 2026",
+  "kicker": "Capital rotates from agents to atoms",
+  "headline": "Silicon And Memory Command AI's Money As Agent Hype Cools",
+  "paragraph": "This week's flow of capital confirms a structural shift: the AI story is moving from software agents to physical infrastructure. South Korea's $550B memory commitment, Etched's $5B chip valuation, and Amazon and Microsoft each launching billion-dollar deployment arms show incumbents racing to own compute and last-mile enterprise delivery. Meanwhile the agents narrative that dominated early 2026 coverage is fading fast, and even Meta's own CEO admits the technology isn't progressing as promised. Regulation is rising in parallel, hitting its highest monthly share of the year as privacy, competition, and content-payment fights multiply across jurisdictions.",
+  "bullets": [
+    "South Korea pledged over $550B to ease the memory chip crunch, while Etched hit a $5B valuation on $1B in booked AI chip sales — the capital center of gravity has shifted from model layers to silicon supply.",
+    "Amazon launched a $1B FDE org and Microsoft a $2.5B AI deployment company, both following OpenAI and Anthropic's playbook — deployment infrastructure, not model access, is becoming the enterprise moat.",
+    "Agents' share of coverage fell from 32.7% in February to 7.1% in July, with momentum down 24% versus the prior 45 days; Zuckerberg conceded agent progress lagged expectations — the hype cycle is normalizing faster than adoption.",
+    "Regulation topic share hit 17.9%, its highest point this year, spanning EU Google Search rules, Cloudflare's publisher-pay mandate (deadline September 15), and a proposed ban on selling health data from chatbot logs.",
+    "Amazon's entity momentum jumped 226% and Google DeepMind's 125%, while Google and Microsoft both fell 37% — attention is rotating toward challengers and vertical plays even as incumbents keep spending at scale."
+  ],
+  "image": "assets/editorial/2026-W27.webp",
+  "image_prompt": "Abstract geometric composition of glowing silicon wafer grids and metallic memory towers rising and converging into a dense industrial skyline, with faint translucent humanoid agent silhouettes dissolving into particles in the background."
+}

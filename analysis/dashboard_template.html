@@ -592,6 +592,41 @@
   .crosstab td.total { font-weight: 600; background: rgba(10,10,10,0.04); }
 
   /* ============================================================
+     BRIEF (tab 00 — weekly executive editorial)
+     ============================================================ */
+  .brief-wrap { max-width: 860px; }
+  .brief-hero {
+    width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block;
+    margin: 0 0 28px; border: 1px solid var(--rule);
+  }
+  .brief-kicker {
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 14px;
+  }
+  .brief-headline {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(26px, 4.5vw, 42px); line-height: 1.08; margin: 0 0 20px;
+  }
+  .brief-para {
+    font-family: var(--sans); font-size: 17px; line-height: 1.6;
+    color: var(--ink-soft); max-width: 720px; margin: 0 0 32px;
+  }
+  .brief-bullets { list-style: none; margin: 0 0 28px; padding: 0; }
+  .brief-bullets li {
+    border-top: 1px solid var(--rule); padding: 14px 0 14px 30px;
+    position: relative; font-family: var(--sans); font-size: 15.5px;
+    line-height: 1.55; color: var(--ink-soft); max-width: 720px;
+  }
+  .brief-bullets li::before {
+    content: ""; position: absolute; left: 2px; top: 22px;
+    width: 14px; height: 2px; background: var(--accent);
+  }
+  .brief-meta {
+    font-family: var(--mono); font-size: 12px; color: var(--gray);
+    border-top: 1px solid var(--rule-strong); padding-top: 12px; max-width: 720px;
+  }
+
+  /* ============================================================
      RESPONSIVE — desktop-first, colapsa hacia abajo
      - 1024px: tablet (reduce paddings, simplifica grids 6-col)
      - 720px:  phone  (single column, tap targets, scroll tabs)
@@ -866,6 +901,7 @@
 <section class="glossary-strip" id="glossary-strip"></section>
 
 <nav class="tabs">
+  <button data-tab="brief"><span class="n">00</span>Brief</button>
   <button data-tab="search" class="active"><span class="n">01</span>Search</button>
   <button data-tab="graph"><span class="n">02</span>Graph</button>
   <button data-tab="money"><span class="n">03</span>Money</button>
@@ -874,6 +910,9 @@
 </nav>
 
 <main>
+
+  <!-- ============== BRIEF ============== -->
+  <section class="pane" id="pane-brief"></section>
 
   <!-- ============== SEARCH ============== -->
   <section class="pane active" id="pane-search">
@@ -1070,6 +1109,32 @@ function sparkbars(values, opts = {}) {
   const s = DATA.stats;
   $("header-meta").innerHTML =
     `<b>${s.n_items}</b> items · <b>${s.date_min}</b> → <b>${s.date_max}</b><br>Built ${DATA.generated_at}`;
+})();
+
+// ============================================================
+// BRIEF (tab 00 — weekly executive editorial, generado por
+// analysis/build_editorial.py; si DATA.editorial es null el tab
+// no existe y Search queda como default)
+// ============================================================
+(function renderBrief() {
+  const ed = DATA.editorial;
+  const btn = document.querySelector('nav.tabs button[data-tab="brief"]');
+  const pane = $("pane-brief");
+  if (!ed) { btn.remove(); pane.remove(); return; }
+  let html = '<div class="brief-wrap">';
+  if (ed.image) html += `<img class="brief-hero" src="${escapeAttr(ed.image)}" alt="">`;
+  html += `<div class="brief-kicker">${escapeHtml(ed.kicker)}</div>`;
+  html += `<h2 class="brief-headline">${escapeHtml(ed.headline)}</h2>`;
+  html += `<p class="brief-para">${escapeHtml(ed.paragraph)}</p>`;
+  html += '<ul class="brief-bullets">' + ed.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("") + '</ul>';
+  html += `<div class="brief-meta">${escapeHtml(ed.date_range)} · generated ${escapeHtml(ed.generated_at)} · auto-written weekly from the digest archive</div>`;
+  html += '</div>';
+  pane.innerHTML = html;
+  // Brief es el tab default cuando existe
+  document.querySelectorAll("nav.tabs button").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
+  btn.classList.add("active");
+  pane.classList.add("active");
 })();
 
 // ============================================================
