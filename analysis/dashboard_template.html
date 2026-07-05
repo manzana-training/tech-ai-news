@@ -228,10 +228,11 @@
     letter-spacing: var(--ls-label); color: var(--gray); margin-bottom: 12px;
   }
   .hi-card .v {
-    font-family: var(--serif); font-weight: 500; font-size: var(--fs-display);
+    /* 32px (no --fs-display): los 6 tiles no deben gritarle al headline semanal */
+    font-family: var(--serif); font-weight: 500; font-size: 32px;
     line-height: 1.05; margin-bottom: 10px;
   }
-  .hi-card .v.sm { font-size: 24px; line-height: 1.25; }
+  .hi-card .v.sm { font-size: 20px; line-height: 1.25; }
   .hi-card .sub { font-family: var(--sans); font-size: var(--fs-small); color: var(--ink-soft); line-height: 1.4; }
   .hi-card .sub .delta-up { font-weight: 600; }
   .hi-card .sub .delta-down { color: var(--gray); }
@@ -627,6 +628,30 @@
   }
 
   /* ============================================================
+     TABBAND (franja editorial estática por tab 01-05; assets/tabs/)
+     ============================================================ */
+  .tabband {
+    height: 96px; overflow: hidden; position: relative;
+    border-bottom: 1px solid var(--rule); display: none;
+  }
+  .tabband img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 45%;
+    display: block; opacity: 0.9;
+  }
+  .tabband::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(244,242,237,0.92) 0%, rgba(244,242,237,0) 20%,
+                             rgba(244,242,237,0) 80%, rgba(244,242,237,0.92) 100%),
+      linear-gradient(180deg, rgba(244,242,237,0.30) 0%, rgba(244,242,237,0) 45%);
+  }
+  .tabband .bandlabel {
+    position: absolute; left: 48px; bottom: 12px; z-index: 2;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--ink-soft);
+  }
+
+  /* ============================================================
      RESPONSIVE — desktop-first, colapsa hacia abajo
      - 1024px: tablet (reduce paddings, simplifica grids 6-col)
      - 720px:  phone  (single column, tap targets, scroll tabs)
@@ -730,7 +755,9 @@
       border-right: none;
       text-align: left;
     }
-    .hi-card .v { font-size: 28px; line-height: 1.1; }
+    .hi-card .v { font-size: 26px; line-height: 1.1; }
+    .tabband { height: 60px; }
+    .tabband .bandlabel { left: 20px; bottom: 8px; }
     .hi-card .v.sm { font-size: 20px; }
     .hi-card .sub { font-size: 13px; }
 
@@ -908,6 +935,11 @@
   <button data-tab="spotlight"><span class="n">04</span>Spotlight</button>
   <button data-tab="patterns"><span class="n">05</span>Patterns</button>
 </nav>
+
+<div class="tabband" id="tabband">
+  <img id="tabband-img" src="" alt="" onerror="this.parentElement.style.display='none'">
+  <span class="bandlabel" id="tabband-label"></span>
+</div>
 
 <main>
 
@@ -1112,6 +1144,30 @@ function sparkbars(values, opts = {}) {
 })();
 
 // ============================================================
+// TABBAND — franja editorial estática por tab (01-05). El 00
+// Brief no lleva banda (ya tiene su hero semanal).
+// ============================================================
+// [numero, label, objectPosition-Y del recorte sobre el 16:9 original]
+const TABBANDS = {
+  search:    ["01", "Search the archive", "45%"],
+  graph:     ["02", "The co-mention network", "45%"],
+  money:     ["03", "Where the money concentrates", "50%"],
+  spotlight: ["04", "Stars of the window", "80%"],
+  patterns:  ["05", "Signals over time", "70%"],
+};
+function updateBand(tab) {
+  const band = $("tabband");
+  if (!band) return;
+  const cfg = TABBANDS[tab];
+  if (!cfg) { band.style.display = "none"; return; }
+  band.style.display = "block";
+  const img = $("tabband-img");
+  img.src = `assets/tabs/${tab}.webp`;
+  img.style.objectPosition = `center ${cfg[2]}`;
+  $("tabband-label").textContent = `${cfg[0]} · ${cfg[1]}`;
+}
+
+// ============================================================
 // BRIEF (tab 00 — weekly executive editorial, generado por
 // analysis/build_editorial.py; si DATA.editorial es null el tab
 // no existe y Search queda como default)
@@ -1252,12 +1308,15 @@ document.querySelectorAll("nav.tabs button").forEach(btn => {
     document.querySelectorAll(".pane").forEach(p => p.classList.remove("active"));
     btn.classList.add("active");
     $("pane-" + btn.dataset.tab).classList.add("active");
+    updateBand(btn.dataset.tab);
     if (btn.dataset.tab === "graph") { setTimeout(drawGraph, 50); renderGraphBottom(); }
     if (btn.dataset.tab === "money") renderMoney();
     if (btn.dataset.tab === "spotlight") renderSpotlight();
     if (btn.dataset.tab === "patterns") renderPatterns();
   });
 });
+// estado inicial de la banda (Brief default => oculta; sin editorial => search)
+updateBand(document.querySelector("nav.tabs button.active").dataset.tab);
 
 // ============================================================
 // DROPDOWNS
