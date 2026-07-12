@@ -1,0 +1,18 @@
+{
+  "week": "2026-W28",
+  "week_label": "2026 · Week 28",
+  "date_range": "Week of Jul 06 – Jul 11, 2026",
+  "generated_at": "Jul 12, 2026",
+  "kicker": "Hardware capital eclipses agent hype",
+  "headline": "Memory And Chips Become AI's New Center Of Gravity",
+  "paragraph": "Capital has rotated from the agent narrative toward the physical layer underneath it. SK Hynix's $26.5B IPO — the largest foreign listing in Wall Street history — and a $550B Korean chip commitment mark a hardware supercycle even as model releases keep accelerating (GPT-5.6, Grok 4.5, Muse Spark). Meanwhile the leading labs show internal strain: OpenAI lost its No. 2 and safety chief in one week while Apple sued it over trade secrets. Security incidents and regulatory pressure are both climbing, signaling that governance is not keeping pace with deployment.",
+  "bullets": [
+    "SK Hynix's $26.5B IPO plus a $550B Korean chip-supply commitment confirm the capital center has moved to memory and compute — agents' monthly topic share fell to 9.5% from a 32.7% February peak.",
+    "Model velocity is up sharply (benchmarks_evals momentum +176%) with GPT-5.6, Grok 4.5, and Muse Spark shipping in the same week — price/performance competition is compressing frontier-lab margins faster than expected.",
+    "OpenAI's No. 2 Fidji Simo stepped back and its safety head departed within days of Apple filing a trade-secret suit — leadership and legal instability at the industry's bellwether just as it scales ChatGPT Work.",
+    "Security incidents hold near 15.5% share of coverage: an AI-run ransomware attack and a GitHub Copilot data-leak exploit show agentic systems are outrunning their own guardrails.",
+    "Big Tech is cutting cost even as chip capex explodes — Microsoft cut 4,800 jobs and is insourcing its own models, Amazon shut new sign-ups for Mechanical Turk — a squeeze on labor and third-party spend beneath the hardware boom."
+  ],
+  "image": "assets/editorial/2026-W28.webp",
+  "image_prompt": "Towering stacks of glowing silicon chip modules rising like skyscrapers against a receding network of small dimming humanoid puppet figures, dramatic industrial lighting, vast scale contrast."
+}
