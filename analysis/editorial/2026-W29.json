@@ -1,0 +1,18 @@
+{
+  "week": "2026-W29",
+  "week_label": "2026 · Week 29",
+  "date_range": "Week of Jul 13 – Jul 19, 2026",
+  "generated_at": "Jul 19, 2026",
+  "kicker": "Regulation and litigation catch up to AI's growth",
+  "headline": "Apple-OpenAI Feud and NY Data Center Freeze Signal AI's Legal Reckoning",
+  "paragraph": "AI's growth story is colliding with courts and regulators. Apple's lawsuit against OpenAI over alleged IP theft threatens to complicate its IPO timeline, while New York halted all new data center construction for a year, citing energy strain from AI demand. Regulation and security_incident are both climbing fastest among tracked topics (+51% and +43% momentum respectively), even as funding_ma cools slightly from June's peak. Meanwhile OpenAI's mindshare is surging (+96% delta, +262% for GPT-5) as Databricks hits a $188B valuation and DeepSeek preps a $71B IPO — capital keeps flowing even as the legal and policy perimeter tightens.",
+  "bullets": [
+    "Apple sues OpenAI over alleged trade-secret theft and sends legal letters to dozens of OpenAI employees — timed to disrupt OpenAI's IPO process just as regulation topic share hits a 2026 high of 16%.",
+    "New York freezes all new data center approvals for a year over energy demand from AI — first major US jurisdiction to formally cap AI infrastructure buildout, a template regulators elsewhere may copy.",
+    "OpenAI's momentum is outpacing every tracked entity (+96% 14-day rate vs prior 45 days; GPT-5 mentions up 262%), while Anthropic (-35%) and SpaceX (-62%) cool sharply — attention is concentrating, not spreading.",
+    "Capital keeps compounding at the top: Databricks at $188B, DeepSeek targeting a $71B IPO valuation, and SK Hynix's $26.5B IPO show money still chasing AI infrastructure and compute even as funding_ma share dips from 28% to 22% month-over-month.",
+    "Security and defense narratives are inverting — Microsoft patched a record 570 vulnerabilities using AI-assisted discovery, and defenders now deploy 'context bombing' against AI hacking agents, as security_incident momentum jumps 43%."
+  ],
+  "image": "assets/editorial/2026-W29.webp",
+  "image_prompt": "A courtroom gavel and a stack of server racks balanced on opposite ends of a scale, with glowing data streams pouring from the servers being measured against the weight of the gavel."
+}
