@@ -37,6 +37,11 @@ lleva separador de miles (`6,361` en vez de `6361`) para leerse mejor conforme c
 Helper `fmtInt` (`toLocaleString`) aplicado a los 4 sitios que pintan conteos
 (header + tabs Money/Spotlight/Patterns). Es exacto, no redondea a "6.3k".
 
+**Etiqueta para el usuario (commit `03d84ad`):** "items" → "news articles" en el
+header (y "articles" en los tabs Money/Spotlight/Patterns) para que un visitante
+entienda que el conteo son artículos de noticia, no un genérico. Se mantiene en inglés
+(el sitio es 100% inglés). Ahora se lee: **"6,361 news articles · 2026-01-01 → 2026-07-25"**.
+
 ---
 
 ## Refreshes previos (reconstruidos de memoria/git)
