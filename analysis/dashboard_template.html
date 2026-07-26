@@ -1142,7 +1142,7 @@ function sparkbars(values, opts = {}) {
 (function renderHeader() {
   const s = DATA.stats;
   $("header-meta").innerHTML =
-    `<b>${fmtInt(s.n_items)}</b> items · <b>${s.date_min}</b> → <b>${s.date_max}</b><br>Built ${DATA.generated_at}`;
+    `<b>${fmtInt(s.n_items)}</b> news articles · <b>${s.date_min}</b> → <b>${s.date_max}</b><br>Built ${DATA.generated_at}`;
 })();
 
 // ============================================================
@@ -1773,7 +1773,7 @@ function renderMoney() {
   const items = itemsInWindow(moneyWindow);
   const nMoney = items.filter(it => it.money > 0).length;
   const winLabel = { "7D": "last 7 days", "15D": "last 15 days", "30D": "last 30 days", "ALL": "all time" }[moneyWindow];
-  $("money-window-info").textContent = `${fmtInt(items.length)} items · ${nMoney} with $ identified · ${winLabel}`;
+  $("money-window-info").textContent = `${fmtInt(items.length)} articles · ${nMoney} with $ identified · ${winLabel}`;
 
   const agg = aggregateMoney(items);
   $("sankey-wrap").innerHTML = renderSankey(agg);
@@ -1802,7 +1802,7 @@ $("winswitch").addEventListener("click", (ev) => {
 function renderSpotlight() {
   const sp = DATA.spotlight[spotWindow];
   if (!sp) return;
-  $("spot-window-info").textContent = `${fmtInt(sp.n_items)} items · since ${sp.from_date}`;
+  $("spot-window-info").textContent = `${fmtInt(sp.n_items)} articles · since ${sp.from_date}`;
 
   function col(title, items, kind) {
     if (!items.length) return `<div class="spot-col"><div class="colhead">${title}</div><p class="mono-label">No data in this window.</p></div>`;
@@ -1933,7 +1933,7 @@ function renderCrosstab() {
   const items = itemsInWindow(patternsWindow);
   const m = patternsWindow === "ALL" ? DATA.ent_topic_matrix : crosstabMatrix(items, ents, tops);
   const winLabel = { "7D": "last 7 days", "30D": "last 30 days", "3M": "last 90 days", "ALL": "all time" }[patternsWindow];
-  $("patterns-window-info").textContent = `${fmtInt(items.length)} items · ${winLabel}`;
+  $("patterns-window-info").textContent = `${fmtInt(items.length)} articles · ${winLabel}`;
   let maxVal = 0;
   for (const e of ents) for (const t of tops) maxVal = Math.max(maxVal, m[e][t]);
   let html = '<thead><tr><th class="entity">Entity \\ Topic</th>';
