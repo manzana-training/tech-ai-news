@@ -18,16 +18,19 @@ scp -q -r starlan:~/tech-ai-news/history/ ./
 echo "==> 2/4  Editorial semanal (tab 00 Brief)..."
 PY analysis/build_editorial.py || echo "  WARN: build_editorial falló — sigo sin brief nuevo"
 
-echo "==> 3/4  Reconstruyendo index.html..."
+echo "==> 3/5  Reconstruyendo index.html..."
 PY analysis/build_dashboard.py
 
-echo "==> 4/4  Estado git (revisa antes de commitear):"
+echo "==> 4/5  Galeria de imagenes del brief (brief-gallery/)..."
+PY analysis/sync_gallery.py || echo "  WARN: sync_gallery fallo — no fatal"
+
+echo "==> 5/5  Estado git (revisa antes de commitear):"
 git status -s
 echo
 echo "Días nuevos en history/:"
 git status -s history/ | grep -E '\.jsonl$' || echo "  (ninguno nuevo)"
 echo
 echo "Listo. Para publicar:"
-echo "  git add history/*.jsonl index.html analysis/editorial/ assets/editorial/"
+echo "  git add history/*.jsonl index.html analysis/editorial/ assets/editorial/ brief-gallery/"
 echo "  git commit -m 'refresh dashboard + brief semanal'"
 echo "  git push"
