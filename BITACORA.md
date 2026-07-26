@@ -32,6 +32,11 @@ rebuild `index.html` → galería → commit/push).
   se agrega sola.
 - Backfill inicial: 4 imágenes (W27–W30).
 
+**Legibilidad del conteo (commit `6b078a8`):** el número de items del header ahora
+lleva separador de miles (`6,361` en vez de `6361`) para leerse mejor conforme crece.
+Helper `fmtInt` (`toLocaleString`) aplicado a los 4 sitios que pintan conteos
+(header + tabs Money/Spotlight/Patterns). Es exacto, no redondea a "6.3k".
+
 ---
 
 ## Refreshes previos (reconstruidos de memoria/git)
