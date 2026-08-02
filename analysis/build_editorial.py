@@ -136,7 +136,13 @@ def compute_signals(items: list[dict]) -> tuple[dict, datetime.date]:
         for t in it.get("topics") or []:
             by_month.setdefault(m, Counter())[t] += 1
             tot_month[m] += 1
-    months = sorted(by_month)[-7:]
+    # El mes en curso arranca con muy pocos datos (al refrescar el dia 1-2 del mes,
+    # el share sale de un puñado de tags y se lee como "tendencia"). Se excluyen los
+    # meses por debajo del piso; si ninguno califica, se usan los ultimos tal cual.
+    MIN_MONTH_TAGS = 60
+    months = [m for m in sorted(by_month) if tot_month[m] >= MIN_MONTH_TAGS][-7:]
+    if not months:
+        months = sorted(by_month)[-7:]
     all_topics = Counter()
     for m in months:
         all_topics.update(by_month[m])
@@ -217,7 +223,24 @@ def compute_signals(items: list[dict]) -> tuple[dict, datetime.date]:
 # ---- Texto (Anthropic) ------------------------------------------------------
 
 
-def generate_brief(signals: dict) -> dict:
+def generate_brief(signals: dict, attempts: int = 3) -> dict:
+    """Reintenta si la prosa sale cortada a media frase (pasa de vez en cuando y
+    el JSON igual es valido, asi que ningun otro check lo caza)."""
+    for i in range(1, attempts + 1):
+        brief = _call_model(signals)
+        cut = [
+            k
+            for k, v in [("paragraph", brief["paragraph"])]
+            + [(f"bullet {n}", b) for n, b in enumerate(brief["bullets"], 1)]
+            if not v.rstrip().endswith((".", "!", "?"))
+        ]
+        if not cut:
+            return brief
+        log(f"WARN: prosa cortada en {', '.join(cut)} — reintento {i}/{attempts}")
+    raise RuntimeError("el modelo devolvio prosa cortada en todos los intentos")
+
+
+def _call_model(signals: dict) -> dict:
     import anthropic
 
     client = anthropic.Anthropic()

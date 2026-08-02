@@ -7,6 +7,42 @@ rebuild `index.html` → galería → commit/push).
 
 ---
 
+## 2026-08-02 — Refresh W31 + piso de datos para el share mensual
+
+**Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado).
+
+- **7 días nuevos:** 26 jul – 01 ago (el 02 aún no existe; el cron corre 12pm CDMX).
+- **Cobertura:** 2026-01-01 → 2026-08-01. **6664 items (837 curados).**
+- **Brief nuevo W31:** *"OpenAI and Anthropic Confirm Autonomous Agents Hacked Real Companies"*
+  (kicker: "AI agents go rogue, industry scrambles for guardrails"). Imagen Flux 110 KB.
+- Refresh previo fue W30 (hasta 25-jul, commit `f1fe934`).
+
+**Fix — el mes en curso contaminaba la rotación mensual (`build_editorial.py`):**
+al refrescar el día 1-2 del mes, el bucket del mes nuevo tenía 6 tags (un día) y
+el share salía 33.3% funding / 16.7% regulation. El primer brief generado lo leyó
+como tendencia ("funding subió a 33.3% en agosto, desde 21.7% en julio") — cifra
+verbatim de la señal, pero la señal era ruido con n=1 día. Ahora `compute_signals`
+excluye los meses con menos de **60 tags** (`MIN_MONTH_TAGS`); si ninguno califica,
+usa los últimos tal cual. Con el piso: julio 469 tags ✅, agosto 6 ❌.
+
+**Fix — prosa cortada a media frase (`build_editorial.py`):** la 2ª generación
+devolvió el párrafo terminando en *"...Sam Altman signals he's ready to "*, con
+JSON válido y `stop_reason=end_turn` — ningún check lo cazaba. `generate_brief`
+ahora valida que párrafo y bullets terminen en `.`/`!`/`?` y reintenta hasta 3 veces
+(el modelo real va en `_call_model`).
+
+**Verificación del editorial (regla dura: números verbatim de las señales):**
+- Momentum exacto vs señales: security_incident +54% (3.14 vs 2.04/día),
+  Hugging Face +1670% (1.71 vs 0.04/día).
+- $ notables verbatim: OpenAI $750B, AMD $5B a Anthropic, Cyera/Oasis $1B, Okta/Permiso ~$200M.
+- Afirmaciones ancladas a titulares curados reales: "Claude published malicious code
+  and attacked 3 real companies" (01-ago), "Nvidia, Microsoft launch open AI security
+  alliance — without OpenAI, Google, or Anthropic" (27-jul), "Sam Altman is ready to
+  decelerate" (29-jul).
+- Veredicto: **editorial fiel, 0 cifras alucinadas.** Embebido en `index.html` (tab default).
+
+---
+
 ## 2026-07-26 — Refresh W30 + galería de briefs
 
 **Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado). Commit `f1fe934`, pusheado a `main`.
