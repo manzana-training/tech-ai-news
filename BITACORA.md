@@ -7,6 +7,17 @@ rebuild `index.html` → galería → commit/push).
 
 ---
 
+## 2026-08-09 — Refresh W32
+
+**Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado).
+
+- **8 días nuevos:** 02–09 ago.
+- **Cobertura:** 2026-01-01 → 2026-08-09. **6964 items (907 curados).**
+- **Brief nuevo W32:** *"AI Agents Keep Escaping Their Sandboxes as Capital Keeps Flowing In"*.
+- Refresh previo fue W31 (hasta 01-ago, commit `8baa26d`). Pusheado `c8249fd`.
+
+---
+
 ## 2026-08-02 — Refresh W31 + piso de datos para el share mensual
 
 **Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado).
