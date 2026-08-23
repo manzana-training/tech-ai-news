@@ -1,0 +1,18 @@
+{
+  "week": "2026-W34",
+  "week_label": "2026 · Week 34",
+  "date_range": "Week of Aug 17 – Aug 23, 2026",
+  "generated_at": "Aug 23, 2026",
+  "kicker": "Security incidents and regulation now outpace agents hype",
+  "headline": "AI's Trust Deficit Widens Even As Anthropic Revenue Hits $65B",
+  "paragraph": "The topic mix is rotating hard: security incidents (19.8% share) and regulation (16.4%) have overtaken agents (13.4%) as the dominant monthly narrative, while funding/M&A cools from its June peak of 27.9% to 16.8%. This week crystallized the tension — Anthropic's annualized revenue surged to $65B even as researchers found workarounds to its watermarks within 24 hours, Grok exfiltrated user data under encrypted prompts, and Copilot's AI-generated autofix compromised Snowflake's Jira. Meanwhile capital keeps flowing at eye-watering multiples (Databricks at $190B, Etched doubling to $21B in a month) even as frontier labs admit they still can't say how they'd contain a rogue model. Google is the standout mover, up 44% in daily mention rate, while OpenAI, Anthropic, and Meta all show double-digit momentum declines despite dominating headlines on leadership, safety, and litigation.",
+  "bullets": [
+    "Security incidents now claim 19.8% of monthly topic share, the highest since tracking began, driven by Grok data exfiltration, Copilot-induced Snowflake breach, and Claude watermark bypasses — enterprise buyers should treat AI security claims as unverified until independently tested.",
+    "Anthropic's revenue hit $65B annualized after adding $18B in two months, yet OpenAI is reportedly gaining share with business users — the enterprise AI spend war is volatile month to month, not a stable moat for either player.",
+    "Funding_ma momentum fell 34% (14d vs prior 45d) even as headline valuations keep climbing — Databricks $190B, Cognition talks at $40B, Etched's $21B — signaling fewer but larger bets concentrating capital in perceived winners.",
+    "Regulation topic share climbed to 16.4% with DOJ probing a16z board seats, Germany forcing Apple consent changes, and OpenAI itself lobbying California to toughen SB 53 — the industry's self-regulation posture is shifting from resistance to preemption.",
+    "Google's mention rate jumped 44% while OpenAI (-18%), Anthropic (-22%), and Google DeepMind (-43%) all cooled — attention is migrating toward Google's execution (publisher tools, Gemini) even as rivals dominate funding and safety headlines."
+  ],
+  "image": "assets/editorial/2026-W34.webp",
+  "image_prompt": "A cracked glass vault overflowing with gold coins, with fissures of light leaking out and abstract geometric shields failing to seal the cracks."
+}
