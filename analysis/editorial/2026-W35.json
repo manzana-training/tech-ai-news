@@ -1,0 +1,18 @@
+{
+  "week": "2026-W35",
+  "week_label": "2026 · Week 35",
+  "date_range": "Week of Aug 24 – Aug 30, 2026",
+  "generated_at": "Aug 30, 2026",
+  "kicker": "Infrastructure land grab hits fever pitch",
+  "headline": "Nvidia Buys Hugging Face as Compute Arms Race Consumes the Industry",
+  "paragraph": "The week's dominant story is capital concentration: Nvidia closing in on Hugging Face for $12.9B, Anthropic signing a $45B compute deal with Nscale on top of $65B annualized revenue, and Amazon tripling its Nvidia chip order to 2M GPUs. Nvidia's news momentum is up 165% versus its 45-day baseline, the sharpest entity spike this week, while open-source consolidation and hardware topics both trend upward as the physical buildout of AI accelerates. Meanwhile regulatory friction is compounding: Uber faces a ~€825M GDPR fine, Sony Music and Warner sue Anthropic over IP theft, and the EU revives encryption-backdoor demands. The message for operators: the moat is shifting from models to compute and distribution, and legal exposure is rising just as fast as valuations.",
+  "bullets": [
+    "Nvidia's reported $12.9B Hugging Face acquisition would fuse the dominant chip supplier with the largest open-model hub, cementing vertical control over the AI stack and squeezing independent inference providers.",
+    "Anthropic's $45B Nscale compute deal plus $65B annualized revenue shows top labs are now pre-committing capital at hyperscaler scale — compute lock-in is the new moat, and it favors incumbents with balance sheets.",
+    "Amazon tripling its Nvidia GPU order to 2M units and Lambda raising $1B in debt to buy and lease chips to Microsoft confirm chip scarcity is driving debt-financed infrastructure races, not just equity rounds.",
+    "Sony Music and Warner suing Anthropic, plus Uber's near-$1B GDPR fine, signal regulators and rights-holders are converging on AI training and automated-decision practices — legal risk is now a line item, not a footnote.",
+    "Regulation's monthly share has climbed to 18% while agents and open-source shares have compressed since Q1, showing the narrative is rotating from capability hype to who controls compute, data rights, and compliance."
+  ],
+  "image": "assets/editorial/2026-W35.webp",
+  "image_prompt": "A towering stack of glowing silicon chips forming a fortress, with thin golden threads of capital flowing into its base while small figures of scales-of-justice stand watch at its perimeter."
+}
