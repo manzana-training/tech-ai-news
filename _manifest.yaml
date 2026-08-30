@@ -26,8 +26,9 @@ structure:
   forbidden_dirs:
     - __pycache__
     - .pytest_cache
-    - history              # gitignored, vive en EC2 (auditoría JSONL)
-    - history.bak.2026-05-17  # backup local, no debe seguir creciendo
+    # history/ removido 2026-08-30: la copia local es operativa (build_dashboard.py
+    # la lee para el sitio); en git sigue ignorada. La intención era "fuera de git".
+    - history.bak.2026-05-17  # backup local; si reaparece, archivarlo en .archive/
 
 artifacts:
   scripts:
