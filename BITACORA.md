@@ -7,6 +7,18 @@ rebuild `index.html` → galería → commit/push).
 
 ---
 
+## 2026-08-30 — Refresh W35
+
+**Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado).
+
+- **7 días nuevos:** 24–30 ago.
+- **Cobertura:** 2026-01-01 → 2026-08-30. **7771 items (1070 curados).**
+- **Brief nuevo W35:** *"Nvidia Buys Hugging Face as Compute Arms Race Consumes the Industry"*.
+- Refresh previo fue W34 (commit `d6a7f18`, sin entrada previa en esta bitácora — W33/W34
+  se refrescaron pero no se registraron aquí). Pusheado `fefdc86`.
+
+---
+
 ## 2026-08-09 — Refresh W32
 
 **Refresh end-to-end** vía `bash analysis/refresh.sh` (scp NO bloqueado).
